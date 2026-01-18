@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人声增强的数学原理</title>
+    <link rel="stylesheet" href="katex/katex.min.css">
+  <script defer src="katex/katex.min.js"></script>
+  <script defer src="katex/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\(', right: '\\)', display: false }
+      ]
+    });
+  });
+  </script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .math {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .note {
+            background-color: #e7f5ff;
+            padding: 15px;
+            border-left: 4px solid #4dabf7;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>基于FFT的人声增强数学原理</h1>
+    
+    <section id="overview">
+        <h2>1. 概述</h2>
+        <p>人声增强的核心思想是通过频域处理分离人声与背景噪声。快速傅里叶变换（FFT）是实现这一过程的关键工具，其数学基础是离散傅里叶变换（DFT）。</p>
+    </section>
+
+    <section id="dft">
+        <h2>2. 离散傅里叶变换（DFT）</h2>
+        <p>对于离散音频信号 \(x[n]\)（\(n = 0,1,...,N-1\)），其DFT定义为：</p>
+        <div class="math">
+            $$
+            X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-j 2\pi kn/N}, \quad k = 0,1,...,N-1
+            $$
+        </div>
+        <p>其中：</p>
+        <ul>
+            <li>\(X[k]\) 是频域复数表示，包含幅度和相位信息</li>
+            <li>\(k\) 对应频率 \(f_k = \frac{k \cdot F_s}{N}\)（\(F_s\)为采样率）</li>
+        </ul>
+        
+        <div class="note">
+            <strong>FFT优化：</strong> 实际应用中采用快速傅里叶变换（FFT）算法，将DFT的计算复杂度从\(O(N^2)\)降低到\(O(N \log N)\)。
+        </div>
+    </section>
+
+    <section id="stft">
+        <h2>3. 短时傅里叶变换（STFT）</h2>
+        <p>为分析时变信号，需对音频分帧处理：</p>
+        <div class="math">
+            $$
+            X[m,k] = \sum_{n=0}^{L-1} x[n+mH] \cdot w[n] \cdot e^{-j 2\pi kn/L}
+            $$
+        </div>
+        <p>参数说明：</p>
+        <ul>
+            <li>\(w[n]\)：窗函数（如汉明窗 \(w[n] = 0.54 - 0.46 \cos(2\pi n/L)\)）</li>
+            <li>\(L\)：帧长（如1024点）</li>
+            <li>\(H\)：帧移（hop size，通常\(H = L/2\)）</li>
+            <li>\(m\)：帧索引</li>
+        </ul>
+        <img src="pictures/Short_time_fourier_transform.png" alt="STFT示意图" width="500" style="display: block; margin: 20px auto;">
+    </section>
+
+    <section id="filtering">
+        <h2>4. 频域滤波</h2>
+        <h3>4.1 人声频带选择</h3>
+        <p>设计滤波器\(H[k]\)保留人声频段（典型300Hz-3kHz）：</p>
+        <div class="math">
+            $$
+            H[k] = 
+            \begin{cases} 
+            1 & \text{当 } f_l \leq \frac{kF_s}{N} \leq f_h \\
+            \text{渐变过渡} & \text{边界区域} \\
+            0 & \text{其他}
+            \end{cases}
+            $$
+        </div>
+        
+        <h3>4.2 频域乘法</h3>
+        <p>滤波操作在频域表现为复数乘法：</p>
+        <div class="math">
+            $$
+            Y[m,k] = X[m,k] \cdot H[k]
+            $$
+        </div>
+    </section>
+
+    <section id="reconstruction">
+        <h2>5. 信号重建</h2>
+        <h3>5.1 逆DFT（IDFT）</h3>
+        <div class="math">
+            $$
+            y[m,n] = \frac{1}{N} \sum_{k=0}^{N-1} Y[m,k] \cdot e^{j 2\pi kn/N}
+            $$
+        </div>
+        
+        <h3>5.2 重叠相加法（OLA）</h3>
+        <p>合并所有帧得到最终信号：</p>
+        <div class="math">
+            $$
+            y[n] = \sum_{m} y[m,n-mH] \cdot w[n-mH]
+            $$
+        </div>
+        <div class="note">
+            <strong>相位处理：</strong> 实际实现中通常保留原始相位 \(\angle X[m,k]\)，仅修改幅度谱 \(|Y[m,k]| = |X[m,k]| \cdot H[k]\)。
+        </div>
+    </section>
+
+    <section id="enhancement">
+        <h2>6. 增强优化技术</h2>
+        <h3>6.1 谱减法</h3>
+        <div class="math">
+            $$
+            |Y[m,k]| = \max(|X[m,k]| - \alpha |D[k]|, \beta |X[m,k]|)
+            $$
+        </div>
+        <p>其中 \(|D[k]|\) 是噪声谱估计，\(\alpha\)为减幅因子，\(\beta\)为谱下限。</p>
+        
+        <h3>6.2 非线性压缩</h3>
+        <div class="math">
+            $$
+            |Y[m,k]| = |X[m,k]|^\gamma \cdot |X[m,k]|^{1-\gamma}, \quad 0 < \gamma < 1
+            $$
+        </div>
+    </section>
+
+    <section id="conclusion">
+        <h2>7. 总结</h2>
+        <p>完整的人声增强流程可表示为：</p>
+        <div class="math">
+            $$
+            \boxed{
+            \text{输入信号} \rightarrow \text{STFT} \rightarrow \text{频域滤波} \rightarrow \text{谱增强} \rightarrow \text{ISTFT} \rightarrow \text{输出信号}
+            }
+            $$
+        </div>
+        <p>关键技术点：</p>
+        <ol>
+            <li>通过FFT实现高效的时频转换</li>
+            <li>合理设计人声频段滤波器</li>
+            <li>处理相位信息避免失真</li>
+            <li>优化重叠重建算法</li>
+        </ol>
+    </section>
+
+    <footer>
+        <p>© 2025 音频信号处理笔记 | 由app作者制作</p>
+    </footer>
+</body>
+</html>

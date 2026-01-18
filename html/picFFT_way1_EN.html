@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>way 1</title>
+  <link rel="stylesheet" href="katex/katex.min.css">
+  <script defer src="katex/katex.min.js"></script>
+  <script defer src="katex/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\(', right: '\\)', display: false }
+      ]
+    });
+  });
+  </script>
+  <style>
+        .bordered-text {
+            border: 2px solid #000; 
+            padding: 10px; 
+            display: inline-block; 
+        }
+  </style>
+  <link rel="stylesheet" href="highlight/styles/default.min.css">
+  <script src="highlight/highlight.min.js"></script>
+  <script src="highlight/languages/matlab.js"></script>
+  <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+  </script>
+  <style>
+            pre, code {
+            font-size: 14px; 
+        }
+   </style>
+   <script>
+        function openInBrowser(event) {
+            event.preventDefault(); 
+            window.open(event.target.href, '_blank'); 
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', openInBrowser);
+            });
+        });
+    </script> 
+</head>
+<body>
+<p style="font-size: 16px;">Citing program sources:
+  <a href="https://github.com/TheKOG/Fourier_Draw">Fourier Transform Plot github</a></p>
+<p style="font-size: 16px;">Reference video link:
+  <a href="https://www.bilibili.com/video/BV1mt411P7ZU/">bilibili video</a></p>
+  <br/>
+<h1>Project usage process:</h1>
+<p>
+1. Run the kruskal.exe<br/>
+
+2. Input image path (the bitmap format) and gradient threshold (default is 200) according to the process <br/>
+
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbspNote: the higher the threshold, the more sparse the contour<br/>
+
+3. Run the Fourier.exe<br/>
+
+4. Press F5 to start drawing
+</p>
+<h1>fourier.exe using advanced tutorials:</h1>
+<p>
+1. Click the screen in order to form a dot matrix<br/>
+
+2. Press Z to undo a point<br/>
+
+3. Press X to restore a point<br/>
+
+4. Press Esc to clear all points<br/>
+
+5. Press F5 to start/end the drawing<br/>
+
+6. Press F1 to show/hide the dot matrix<br/>
+
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbspNote: when drawing, the program does not display the dot matrix by default. Press F1 to display the dot matrix<br/>
+
+7. Press F2 to hide/show the vector<br/>
+
+8. Pause drawing by space<br/>
+
+9. You can modify data.in to set the initial lattice<br/>
+
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbspNote: kruskal.exe will output the calculation result to data.in
+</p>
+
+<h1>Compiled instruction</h1>
+<p>
+For kruskal.cpp:	g++ kruskal.cpp -o kruskal -lgdi32<br/>
+
+For fourier.cpp: 	g++ fourier.cpp -o fourier -lgdi32 -mwindows <br/>
+</p>
+<h1> Introduction to algorithms</h1>
+<p>
+For kruskal.cpp: edge operator, Delaunay triangulation algorithm, kruskal minimum spanning tree algorithm, Douglas-Peucker algorithm;<br/>
+
+For fourier.cpp: fast Fourier transform algorithm, inverse discrete Fourier transform algorithm;<br/>
+</p>
+<h1>Copyright statement</h1>
+<p>
+The original author is linked at the beginning of the article.
+</p>
+</body>
+</html>

@@ -1,0 +1,3 @@
+MATLAB R2022b or Above
+Python 3.10 or above
+The latest version of Arduino IDE

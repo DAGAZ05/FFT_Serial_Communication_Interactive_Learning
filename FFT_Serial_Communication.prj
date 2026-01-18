@@ -1,0 +1,141 @@
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration build-checksum="4002673166" file="D:\Materials in NWPU\2025 Spring\course\MATLAB Basics and Graphical User Interface Design\FFT Serial Communication Interactive Learning\FFT_Serial_Communication.prj" location="D:\Materials in NWPU\2025 Spring\course\MATLAB Basics and Graphical User Interface Design\FFT Serial Communication Interactive Learning" name="FFT_Serial_Communication" target="target.mlapps" target-name="打包为 App">
+    <param.appname>FFT_Serial_Communication</param.appname>
+    <param.authnamewatermark>Wang Zixun</param.authnamewatermark>
+    <param.email>wangzixun@mail.nwpu.edu.cn</param.email>
+    <param.company>Northwestern Polytechnical University</param.company>
+    <param.icon />
+    <param.icons />
+    <param.summary>This is my course design work for MATLAB GUI course in 2025 spring. Aim to use Arduino sevices to implement a simple FFT learning.</param.summary>
+    <param.description>The main interface of this App is divided into the following 9 columns, and the main functions they implement are as follows:
+(1) &lt;b&gt;FFT theory&lt;/b&gt;:
+Displays relevant documents of FFT, including historical origin, Euler formula, FS (Fourier series), FT (Fourier transform), DFS (discrete Fourier series), DTFT (discrete time Fourier transform), DFT (discrete Fourier transform), FFT, commonly used FFT tools in MATLAB and common problems of FFT.
+(2) &lt;b&gt;Figure example&lt;/b&gt;:
+Displays the Fourier transform related images of square waves; draws the dynamic image of the Fourier transform of closed figures in real time; displays the documents of the application of FFT (including DFT and other related contents) in graphics.
+(3) &lt;b&gt;Picture FFT&lt;/b&gt;:
+Two methods can be selected for the application of FFT in images. Method 1: Based on C++, extract the contour of jpg/png/bmp images and provide dynamic display of Fourier circles; Method 2: Based on Python (Python interpreter is required on the PC), extract the hard edge or single path svg of jpg/png, perform fast Fourier transform on the path, render the image through the processing program, and manually adjust 5 related parameters.
+(4) &lt;b&gt;Audio FFT&lt;/b&gt;:
+Implement a simple music player interface, and draw the waveform and spectrum of the song based on FFT; implement vocal enhancement based on FFT; play songs played by different built-in instruments, and analyze the harmonic structure of different instruments through FFT.
+(5) &lt;b&gt;Sound signal process&lt;/b&gt;:
+Provide a method to automatically obtain available ports and connect to the Arduino serial port; provide a line connection method for Arduino Uno (based on sound sensor); display the dynamic image of waveform, spectrum and silence detection through FFT, and dynamically update the parameter table; implement silence filtering; implement audio voice change processing (convert the original audio into male, female, cartoon or machine voice based on FFT), and the recording device supports Arduino Uno and PC microphone.
+(6) &lt;b&gt;Light signal process&lt;/b&gt;:
+Provides a method to automatically obtain available ports and connect to the Arduino serial port; provides a line connection method for Arduino Uno (based on photosensors); collects optical signals and updates the parameter table in real time; displays waveforms and spectrum diagrams based on FFT.
+(7) &lt;b&gt;Real-time music game&lt;/b&gt;:
+Import songs and analyze their main frequencies; simulate the notes of songs based on FFT and implement the music game interface.
+(8) &lt;b&gt;Interactive practice&lt;/b&gt;:
+Users complete 10 FFT-related test questions and the answers can be displayed.
+(9) &lt;b&gt;Export data&lt;/b&gt;:
+Some documents, images, parameter tables, etc. involved in the above modules can be exported.
+In addition, the sidebar also provides related instruction document display, language switching, image import, audio import, obtaining the Python interpreter of the PC, viewing the Arduino program, and other functions, and supports interface size scaling.</param.description>
+    <param.screenshot>C:\Users\Lenovo\AppData\Local\Temp\tpc1b6d3f2_6455_4a50_8b3a_c71837b6df85.png</param.screenshot>
+    <param.version>1.0</param.version>
+    <param.products.name>
+      <item>MATLAB</item>
+    </param.products.name>
+    <param.products.id>
+      <item>1</item>
+    </param.products.id>
+    <param.products.version>
+      <item>9.13</item>
+    </param.products.version>
+    <param.platforms />
+    <param.output>${PROJECT_ROOT}</param.output>
+    <param.guid>2d4adf54-705d-48ce-a9c6-92c918e9c2eb</param.guid>
+    <unset>
+      <param.email />
+      <param.company />
+      <param.icon />
+      <param.icons />
+      <param.version />
+      <param.platforms />
+      <param.output />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\FFT_Serial_Communication.mlapp</file>
+    </fileset.main>
+    <fileset.depfun>
+      <file>${PROJECT_ROOT}\analyze_harmonics.m</file>
+      <file>${PROJECT_ROOT}\createAlertWay1.m</file>
+      <file>${PROJECT_ROOT}\createAlertWay2.m</file>
+      <file>${PROJECT_ROOT}\deleteFilesOnly.m</file>
+      <file>${PROJECT_ROOT}\enhanceVoice.m</file>
+      <file>${PROJECT_ROOT}\languageChange.m</file>
+      <file>${PROJECT_ROOT}\processWay2.m</file>
+      <file>${PROJECT_ROOT}\processWay3.m</file>
+      <file>${PROJECT_ROOT}\sec2HourMinSec.m</file>
+    </fileset.depfun>
+    <fileset.resources>
+      <file>${PROJECT_ROOT}\audios</file>
+      <file>${PROJECT_ROOT}\data</file>
+      <file>${PROJECT_ROOT}\FourierCircleDrawing</file>
+      <file>${PROJECT_ROOT}\FourierDraw</file>
+      <file>${PROJECT_ROOT}\html</file>
+      <file>${PROJECT_ROOT}\photoresistor</file>
+      <file>${PROJECT_ROOT}\pictures</file>
+      <file>${PROJECT_ROOT}\pre</file>
+      <file>${PROJECT_ROOT}\saved_audios</file>
+      <file>${PROJECT_ROOT}\sound_sensor</file>
+    </fileset.resources>
+    <fileset.package />
+    <build-deliverables>
+      <file location="D:\Materials in NWPU\2025 Spring\course\MATLAB Basics and Graphical User Interface Design" name="FFT Serial Communication Interactive Learning" optional="false">D:\Materials in NWPU\2025 Spring\course\MATLAB Basics and Graphical User Interface Design\FFT Serial Communication Interactive Learning</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>D:\MATLAB R2022b\MATLAB</root>
+      <toolboxes>
+        <toolbox name="matlabcoder" />
+        <toolbox name="embeddedcoder" />
+        <toolbox name="gpucoder" />
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabhdlcoder" />
+        <toolbox name="neuralnetwork" />
+      </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
+      </toolbox>
+      <toolbox>
+        <gpucoder>
+          <enabled>true</enabled>
+        </gpucoder>
+      </toolbox>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

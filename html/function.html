@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>功能说明</title>
+  <link rel="stylesheet" href="katex/katex.min.css">
+  <script defer src="katex/katex.min.js"></script>
+  <script defer src="katex/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\(', right: '\\)', display: false }
+      ]
+    });
+  });
+  </script>
+  <style>
+        .bordered-text {
+            border: 2px solid #000; 
+            padding: 10px; 
+            display: inline-block; 
+        }
+  </style>
+  <link rel="stylesheet" href="highlight/styles/default.min.css">
+  <script src="highlight/highlight.min.js"></script>
+  <script src="highlight/languages/matlab.js"></script>
+  <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+  </script>
+  <style>
+            pre, code {
+            font-size: 14px; 
+        }
+   </style>
+   <script>
+        function openInBrowser(event) {
+            event.preventDefault(); 
+            window.open(event.target.href, '_blank'); 
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', openInBrowser);
+            });
+        });
+    </script> 
+</head>
+<body>
+<h1>功能说明</h1>
+<h2>边栏</h2>
+<p>
+	左侧按钮及选项卡组头部均可调整当前所在栏目。<br/>
+	点击界面左上角按钮可查看App功能、作者制作App时参考的资料及作者的学校邮箱。<br/>
+	界面右上角按钮功能如下：<br/>
+	1.导入图片（用于图像FFT栏目）；<br/>
+	2.导入音频（用于音频FFT及实时音游栏目）；<br/>
+	3.查看arduino程序代码及打开arduino程序（用于arduino声信号处理及arduino光信号处理栏目）；<br/>
+	4.语言切换，可在中文与英文间切换；<br/>
+	5.Python接口，可选择PC上的Python解释器。
+</p>
+<h2>FFT理论</h2>
+<p>
+	较为详细地介绍了快速傅里叶变换的相关理论，包括历史溯源、傅里叶级数、傅里叶变换、离散傅里叶变换及快速傅里叶变换等。
+</p>
+<h2>简易图形示范</h2>
+<p>
+	左侧为对方波傅里叶变换的相位谱、时域图、频域图、三维频域图，可以通过滑动滑块调节增加谐波的个数（0-100）。<br/>
+	左下角为对手绘闭合曲线进行傅里叶变换的实时交互html文档，点击按钮可进入查看。<br/>
+	右上角为傅里叶变化的波形说明，右下角为傅里叶变换在jpeg文件上的应用。
+</p>
+<h2>图像FFT</h2>
+<p>
+	可选择两种方式进行图像的FFT应用：<br/>
+	方式1：基于C++，提取jpg/png/bmp图像的轮廓并提供傅里叶圆的动态展示，按F5开始绘制（建议导入图像不要太复杂）；<br/>
+	方式2：基于Python（需PC自带Python解释器或点击上部链接进入Python官网下载），提取jpg/png的硬边缘或单路径svg，对路径进行快速傅里叶变换，通过processing程序进行图像渲染（在右下角解压processing安装包或PC自带processing程序）。右侧具有5个相关参数，填写或选择后再点击动态展示按钮进行Python程序运算及processing渲染。点击processing程序左上角开始按钮后进行绘制。
+</p>
+<h2>音频FFT</h2>
+<p>
+	点击导入歌曲按钮可在左上角列表框中显示导入的歌曲。点击播放、暂停、续播、停止、上一首、下一首及调整进度条可对歌曲播放状态进行调整。选择局部或整体单选框选项，可在中间坐标区绘制局域或全局的波形图、频谱图。<br/>
+	下方两个按钮可基于快速傅里叶变换进行人声增强，及查看相关原理。<br/>
+	右方为乐器的谐波结构分析，选择一种乐器，点击左侧的乐器播放按钮，可播放以该乐器演奏的一首纯音乐，并显示谐波结构图像。点击停止按钮可停止乐器播放。
+</p>
+<h2>arduino声信号处理</h2>
+<p>
+	先查看线路图以连接arduino uno电路（注意：图示声音传感器及光敏传感器的SIG端口在实物中皆对应AO端口）。程序会自动查找可供连接的PC端口，注意在PC设备管理器中查看arduino接入的端口。点击主界面右上角的arduino图标以查看arduino程序并上传至arduino uno开发板。点击执行bat按钮。选择端口后点击连接按钮。点击下部开始按钮即可开始收集arduino信号。（由于受硬件及matlab处理能力限制，实际处理效果会有较大延迟。）程序会通过快速傅里叶变换显示波形、频谱及静音检测的动态图像，并动态更新参数表。点击结束按钮停止收集信号。<br/>
+	点击导出静音过滤按钮，可得到滤除静音后的音频。点击播放、停止按钮可控制播放。<br/>
+	右侧为变声处理分栏。可选择使用arduino或使用PC麦克风进行基于FFT的变声处理。若选择麦克风，需先使用开始、结束按钮进行录制。点击右下角播放、停止按钮可控制播放变声后音频。播放过程中会显示原始及处理后的波形图。<br/>
+	注意：arduino代码中的静音阈值为560。根据声音传感器电容的不同，声强信号不同，电容越大，声强信号越大，检测越灵敏。声音传感器的电容可以通过如图处的旋栓进行调整，请在使用前进行手动调节，使静音阈值接近560。
+</p>
+<img src="pictures/sound_sensor_real.png" alt="Sound Sensor" style="display: block; margin: 0 auto; width: 20%; height: auto;">
+<h2>arduino光信号处理</h2>
+<p>
+	arduino连接方式同声信号处理。点击开始、结束按钮控制光信号收集。右侧参数表会实时更新，中间坐标区会显示光强信号及频谱能量分布图像。光敏传感器如下图所示。
+</p>
+<img src="pictures/photoresistor_real.png" alt="Photoresistor" style="display: block; margin: 0 auto; width: 20%; height: auto;">
+<h2>实时音游</h2>
+<p>
+	左侧可导入歌曲，并进行FFT分析，分析结果显示在左下方图像上。根据文本区的键盘按钮对应简谱音符的提示，可在点击开始按钮后进行音游。点击播放按钮播放原音乐。点击结束按钮结束音乐播放及音游。分数标签可实时显示当前得分。右下角可调节音量。
+</p>
+<h2>交互练习</h2>
+<p>
+	在html组件上进行交互练习，共计10道题，点击验证答案可反馈正误。
+</p>
+<h2>数据导出</h2>
+<p>
+	在数复选框中选择要导出的文件，点击导出数据按钮，选择导出文件夹后即可完成导出。
+</p>
+</body>
+</html>

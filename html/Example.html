@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图形示例</title>
+  <link rel="stylesheet" href="katex/katex.min.css">
+  <script defer src="katex/katex.min.js"></script>
+  <script defer src="katex/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\(', right: '\\)', display: false }
+      ]
+    });
+  });
+  </script>
+  <style>
+        .bordered-text {
+            border: 2px solid #000; 
+            padding: 10px; 
+            display: inline-block; 
+        }
+  </style>
+  <link rel="stylesheet" href="highlight/styles/default.min.css">
+  <script src="highlight/highlight.min.js"></script>
+  <script src="highlight/languages/matlab.js"></script>
+  <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+  </script>
+  <style>
+            pre, code {
+            font-size: 14px; 
+        }
+   </style>
+   <script>
+        function openInBrowser(event) {
+            event.preventDefault(); 
+            window.open(event.target.href, '_blank'); 
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', openInBrowser);
+            });
+        });
+    </script> 
+</head>
+<body>
+<p style="font-size: 16px;">参考网址链接：
+  <a href="https://www.jezzamon.com/fourier/zh-cn.html">傅里叶变换交互式入门</a></p>
+  <br/>
+  <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp傅里叶变换是一种在各个领域都经常使用的数学工具。我将为你介绍傅里叶变换能干什么，为什么傅里叶变换非常有用，以及你如何利用傅里叶变换干漂亮的事。就像下面这样：
+  </p>
+  <img src="pictures/example/2.gif" alt="Self Draw" style="display: block; margin: 0 auto; width: 60%; height: auto;">
+  <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp在上一个模块你已经知晓了FFT的相关数学原理及MATLAB应用，在这里，你将简单地从图形的角度了解：<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<i>什么是傅里叶变换</i><br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<i>傅里叶变换的一些实际用途</i><br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<i>傅立叶变换的一些很酷的用法（虽然有些没有实际意义）</i>
+  </p>
+  <h1>傅里叶变换是什么</h1>
+  <p>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp简而言之，傅里叶变换把一个输入信号分解成一堆正弦波的叠加。就像大多数数学方法一样，这个名字来自一个名叫傅里叶的人。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp让我们从一些简单的例子开始，然后继续前进。首先，我们来看看什么是波 —— 波随着时间的推移，一直按照某一规律变化。波可以分解为两个正弦波的叠加。也就是说，当我们将两个正弦波相加时，就会得到原来的波。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp傅里叶变换可以让我们从一个复杂的波形里面，把构成这个波的单个正弦波分离出来。在这个例子中，你几乎可以通过“脑补”完成这一操作。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp为什么？事实证明，现实世界中的许多事物间的互相交互，都是基于正弦波。我们通常将这种波的快慢的性质，称为波的频率。最明显的例子就是声音 —— 当我们听到声音时，我们听不到那条波浪线，但我们听到构成声音的正弦波的不同频率。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp能够在计算机上区分这两个音调，我们就可以了解一个人实际可以听到的内容。我们可以理解声音的高低，或弄清楚这个波包含了什么音符。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp一些波看起来不像由正弦波构成，我们也可以用这个分解的过程来进行分析。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp我们来看看这个家伙吧。这个波称为方波。虽然看起来不太可能，但它确实也可以分解成正弦波。
+ <img src="pictures/example/5.gif" alt="Square Wave" style="display: block; margin: 0 auto; width: 60%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp这次我们需要很多 —— 理论上是无限多的正弦波来完美地表达一个方波。 随着我们加入越来越多的正弦波，叠加出的波形就越来越接近方波。 
+ <img src="pictures/example/6.gif" alt="Square Wave" style="display: block; margin: 0 auto; width: 60%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp或者你可以从正弦与单位圆的关系中看待这个方波：
+ <img src="pictures/example/1.gif" alt="Square Wave" style="display: block; margin: 0 auto; width: 60%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp在视觉上，你会注意到前几个正弦波的叠加可以在结果中产生最大差异。波数增加时，就有一些方波的样子了，但它看起来摇摆不定。加上更多小的正弦波，组合出的波形看起来就平坦了。  
+</p>
+<p>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp我们可以利用这个事实：使用傅里叶变换，我们可以把音频中最重要的成分表达出来，并且得到和原始声音非常接近的波形。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp在计算机中，波形以一系列数据点的形式来存储。
+<img src="pictures/example/7.png" alt="Data Point" style="display: block; margin: 0 auto; width: 60%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp我们可以做的是，将声音表示为一堆正弦波。然后可以通过忽略掉较小幅度的高频成分来压缩声音。尽管得出的波形与原始波形不一样，但是听起来将会和原始声音很接近。
+<img src="pictures/example/8.png" alt="Data Point" style="display: block; margin: 0 auto; width: 60%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp这基本上就是MP3做的事情。MP3除此之外还可以更聪明地知道需要保留哪些频率以及扔掉哪些频率。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp所以在这种情况下，我们可以使用傅里叶变换来理解波的基本属性，然后我们可以将它用于数据的压缩之类的事情。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp好的，现在让我们深入了解傅立叶变换。下一部分看起来很酷，也让你更加了解傅立叶变换的作用。但大多只是“看起来”很酷。
+</p>
+<h1>周转圆</h1>
+<p>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp在开始时，我介绍了傅里叶变换可以将事物分成正弦波。但更酷的是，它产生的正弦波不仅仅是一般的正弦波，它们都是“三维”的正弦波。你可以称之为“复杂的”正弦曲线，或者，“螺旋”。
+<img src="pictures/example/9.gif" alt="Epicycles" style="display: block; margin: 0 auto; width: 60%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp如果我们从侧面看，它们看起来像正弦波。但是，从正面看，它们看起来像圆圈。
+<img src="pictures/example/10.gif" alt="Epicycles" style="display: block; margin: 0 auto; width: 60%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp到目前为止，我们所做的一切只需要常规的2D正弦波。 当我们对2D波进行傅里叶变换时，“复杂的”部分被忽略了，所以我们最终也只能得到正弦波。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp但是我们可以使用3D正弦波来制作看起来很有趣的东西，就像这个：
+<img src="pictures/example/11.gif" alt="Hand" style="display: block; margin: 0 auto; width: 60%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp这里发生了什么事情呢？
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp我们可以将一个手绘图理解为一个3D的形状，因为点的位置在随时间移动。如果你想象一个人正在绘制一只手，那么这三个维度就代表了某一时刻铅笔尖的位置。除了x和y维度告诉我们笔尖的位置，还有一个时间维度。
+<img src="pictures/example/12.gif" alt="Hand" style="display: block; margin: 0 auto; width: 60%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp现在我们有一个3D的形状，我们不能使用常规2D正弦波把它表示出来。无论我们添加多少2D正弦波，我们都永远不会得到3D。所以我们需要些别的东西。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp我们可以使用的是之前的3D螺旋正弦波。如果我们添加很多这些螺旋，得到的东西就看起来像我们的3D形状。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp请记住，当我们从前面看它们时，这些波浪看起来像圆圈。围绕另一个圆圈移动的圆圈图案，被称为“周转圆”。
+<img src="pictures/example/13.gif" alt="Hand" style="display: block; margin: 0 auto; width: 60%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp像以前一样，我们只用几个圆圈就可以很好地近似表达出原始图案。因为这是一个相当简单的形状，所有后面添加的小圆都是使边缘更加锐利。这些适用于任何一个图案。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp同样，你会发现，对于大多数形状，我们可以用很少的圆圈很好地近似表达它们，要保存一个形状，我们不必保存形状上所有的点。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp这个方法可以应用于实际数据吗？ 答案是可以！ 实际上，我们有另一种称为SVG的数据格式，比我们在这里绘制图案更好用一些。所以目前，我们只是制作了些炫酷的小GIF。
+<img src="pictures/example/14.gif" alt="Small Gif" style="display: block; margin: 0 auto; width: 60%; height: auto;">
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp关于SVG图形进行傅里叶变换的方法，这个App的制作者，也就是我，也曾做过尝试。事实上，你可以在Adobe Illustrator等图像处理软件中提取图形的SVG路径（注意：必须是首尾相连的单个路径！），然后利用一个简单的Python程序计算FFT后的数据点，再在图形渲染程序上运行（之前我使用的是processing），就可以生成图像的傅里叶变换效果了。具体可以参考Bilibili视频<a href="https://www.bilibili.com/video/BV1Gs411372c">FourierCircleDrawing</a>。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp这是我参考上述视频做出的傅里叶变换效果，我将它作为了我的母亲的生日礼物：
+<img src="pictures/example/4.gif" alt="Gift for Mom" style="display: block; margin: 0 auto; width: 60%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp当然，在这个模块下方的文档（A Tale of Math & Art: Creating the Fourier Series Harmonic Circles Visualization）里还有相关的效果制作方法，效果如下：
+<img src="pictures/example/3.gif" alt="Horse" style="display: block; margin: 0 auto; width: 60%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp然而，还有另一种类型的视觉数据使用傅里叶变换。（见下方文档）
+</p>
+</body>
+</html>

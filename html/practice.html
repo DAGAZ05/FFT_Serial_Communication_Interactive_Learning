@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>练习</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; }
+        .question {
+            background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #4285F4; color: white; border: none; padding: 8px 15px;
+            border-radius: 4px; cursor: pointer; margin-top: 10px;
+        }
+        .feedback { margin-top: 10px; font-weight: bold; display: none; }
+        .correct { color: #0F9D58; }
+        .incorrect { color: #DB4437; }
+        img { max-width: 100%; border: 1px solid #ddd; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h2 style="color: #4285F4;">FFT 交互式练习</h2>
+
+    <!-- 题目 1：FFT基础 -->
+    <div class="question">
+        <h3>1. FFT 是哪种算法的优化版本？</h3>
+        <input type="radio" name="q1" id="q1a" value="a">
+        <label for="q1a">离散傅里叶变换（DFT）</label><br>
+        <input type="radio" name="q1" id="q1b" value="b">
+        <label for="q1b">拉普拉斯变换</label><br>
+        <input type="radio" name="q1" id="q1c" value="c">
+        <label for="q1c">Z变换</label><br>
+        <button onclick="checkAnswer('q1', 'a')">验证答案</button>
+        <div id="feedback-q1" class="feedback"></div>
+    </div>
+
+    <!-- 题目 2：频域分辨率 -->
+    <div class="question">
+        <h3>2. 若采样频率为 1000 Hz，FFT 点数为 1024，频率分辨率是多少？</h3>
+        <input type="radio" name="q2" id="q2a" value="a">
+        <label for="q2a">≈ 0.98 Hz</label><br>
+        <input type="radio" name="q2" id="q2b" value="b">
+        <label for="q2b">≈ 1.95 Hz</label><br>
+        <input type="radio" name="q2" id="q2c" value="c">
+        <label for="q2c">≈ 100 Hz</label><br>
+        <button onclick="checkAnswer('q2', 'a')">验证答案</button>
+        <div id="feedback-q2" class="feedback"></div>
+    </div>
+
+    <!-- 题目 3：信号识别（图片题） -->
+    <div class="question">
+        <h3>3. 下图信号的 FFT 频谱最可能对应哪个选项？</h3>
+        <img src="pictures/sine_plus_noise.png" alt="含噪声的正弦波" width="300"></br>
+        <input type="radio" name="q3" id="q3a" value="a">
+        <label for="q3a">单一峰值 + 基底噪声</label><br>
+        <input type="radio" name="q3" id="q3b" value="b">
+        <label for="q3b">多个等间距峰值</label><br>
+        <input type="radio" name="q3" id="q3c" value="c">
+        <label for="q3c">无显著峰值</label><br>
+        <button onclick="checkAnswer('q3', 'a')">验证答案</button>
+        <div id="feedback-q3" class="feedback"></div>
+    </div>
+
+    <!-- 题目 4：Arduino 采样 -->
+    <div class="question">
+        <h3>4. 用 Arduino 采集音频信号时，为避免混叠，采样频率应满足：</h3>
+        <input type="radio" name="q4" id="q4a" value="a">
+        <label for="q4a">≥ 2倍信号最高频率</label><br>
+        <input type="radio" name="q4" id="q4b" value="b">
+        <label for="q4b">≤ 信号最高频率</label><br>
+        <input type="radio" name="q4" id="q4c" value="c">
+        <label for="q4c">与信号频率无关</label><br>
+        <button onclick="checkAnswer('q4', 'a')">验证答案</button>
+        <div id="feedback-q4" class="feedback"></div>
+    </div>
+
+    <!-- 题目 5：窗函数 -->
+    <div class="question">
+        <h3>5. 汉宁窗（Hanning Window）的主要作用是：</h3>
+        <input type="radio" name="q5" id="q5a" value="a">
+        <label for="q5a">减少频谱泄漏</label><br>
+        <input type="radio" name="q5" id="q5b" value="b">
+        <label for="q5b">提高频率分辨率</label><br>
+        <input type="radio" name="q5" id="q5c" value="c">
+        <label for="q5c">增加信号幅值</label><br>
+        <button onclick="checkAnswer('q5', 'a')">验证答案</button>
+        <div id="feedback-q5" class="feedback"></div>
+    </div>
+
+    <!-- 题目 6：Arduino 实时FFT -->
+    <div class="question">
+        <h3>6. 用 Arduino 实现实时 FFT 时，通常需要：</h3>
+        <input type="radio" name="q6" id="q6a" value="a">
+        <label for="q6a">将数据发送到 MATLAB/PC 处理</label><br>
+        <input type="radio" name="q6" id="q6b" value="b">
+        <label for="q6b">直接在 Arduino 上计算 FFT</label><br>
+        <input type="radio" name="q6" id="q6c" value="c">
+        <label for="q6c">仅采集时域信号</label><br>
+        <button onclick="checkAnswer('q6', 'a')">验证答案</button>
+        <div id="feedback-q6" class="feedback"></div>
+    </div>
+
+    <!-- 题目 7：频谱对称性 -->
+    <div class="question">
+        <h3>7. 实数信号的 FFT 频谱通常具有：</h3>
+        <input type="radio" name="q7" id="q7a" value="a">
+        <label for="q7a">共轭对称性</label><br>
+        <input type="radio" name="q7" id="q7b" value="b">
+        <label for="q7b">随机分布</label><br>
+        <input type="radio" name="q7" id="q7c" value="c">
+        <label for="q7c">仅正频率成分</label><br>
+        <button onclick="checkAnswer('q7', 'a')">验证答案</button>
+        <div id="feedback-q7" class="feedback"></div>
+    </div>
+
+    <!-- 题目 8：噪声识别 -->
+    <div class="question">
+        <h3>8. 白噪声在频域中的特征是：</h3>
+        <input type="radio" name="q8" id="q8a" value="a">
+        <label for="q8a">平坦的功率谱</label><br>
+        <input type="radio" name="q8" id="q8b" value="b">
+        <label for="q8b">单一频率峰值</label><br>
+        <input type="radio" name="q8" id="q8c" value="c">
+        <label for="q8c">周期性波动</label><br>
+        <button onclick="checkAnswer('q8', 'a')">验证答案</button>
+        <div id="feedback-q8" class="feedback"></div>
+    </div>
+
+    <!-- 题目 9：Arduino 传感器 -->
+    <div class="question">
+        <h3>9. 用 Arduino 的加速度计测量振动时，FFT 可帮助：</h3>
+        <input type="radio" name="q9" id="q9a" value="a">
+        <label for="q9a">识别振动的主要频率成分</label><br>
+        <input type="radio" name="q9" id="q9b" value="b">
+        <label for="q9b">提高传感器精度</label><br>
+        <input type="radio" name="q9" id="q9c" value="c">
+        <label for="q9c">减少采样时间</label><br>
+        <button onclick="checkAnswer('q9', 'a')">验证答案</button>
+        <div id="feedback-q9" class="feedback"></div>
+    </div>
+
+    <!-- 题目 10：实际应用 -->
+    <div class="question">
+        <h3>10. 在音频处理中，FFT 常用于：</h3>
+        <input type="radio" name="q10" id="q10a" value="a">
+        <label for="q10a">均衡器设计和音高检测</label><br>
+        <input type="radio" name="q10" id="q10b" value="b">
+        <label for="q10b">降低文件大小</label><br>
+        <input type="radio" name="q10" id="q10c" value="c">
+        <label for="q10c">增强时域波形</label><br>
+        <button onclick="checkAnswer('q10', 'a')">验证答案</button>
+        <div id="feedback-q10" class="feedback"></div>
+    </div>
+
+    <script>
+        function checkAnswer(questionId, correctAnswer) {
+            const selectedOption = document.querySelector(`input[name="${questionId}"]:checked`);
+            const feedbackDiv = document.getElementById(`feedback-${questionId}`);
+
+            if (!selectedOption) {
+                feedbackDiv.textContent = "请选择一个答案！";
+                feedbackDiv.className = "feedback incorrect";
+                feedbackDiv.style.display = "block";
+                return;
+            }
+
+            if (selectedOption.value === correctAnswer) {
+                feedbackDiv.textContent = "✅ 正确！";
+                feedbackDiv.className = "feedback correct";
+            } else {
+                feedbackDiv.textContent = "❌ 错误，正确答案是选项 " + correctAnswer.toUpperCase();
+                feedbackDiv.className = "feedback incorrect";
+            }
+            feedbackDiv.style.display = "block";
+        }
+    </script>
+</body>
+</html>

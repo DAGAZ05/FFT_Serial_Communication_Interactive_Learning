@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relevant to JPG</title>
+  <link rel="stylesheet" href="katex/katex.min.css">
+  <script defer src="katex/katex.min.js"></script>
+  <script defer src="katex/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\(', right: '\\)', display: false }
+      ]
+    });
+  });
+  </script>
+  <style>
+        .bordered-text {
+            border: 2px solid #000; 
+            padding: 10px; 
+            display: inline-block; 
+        }
+  </style>
+  <link rel="stylesheet" href="highlight/styles/default.min.css">
+  <script src="highlight/highlight.min.js"></script>
+  <script src="highlight/languages/matlab.js"></script>
+  <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+  </script>
+  <style>
+            pre, code {
+            font-size: 14px; 
+        }
+   </style>
+   <script>
+        function openInBrowser(event) {
+            event.preventDefault(); 
+            window.open(event.target.href, '_blank'); 
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', openInBrowser);
+            });
+        });
+    </script> 
+</head>
+<body>
+  <h1>JPEGs</h1>
+  <p>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Did you know Fourier transforms can also be used on images? In fact, we use it all the time, because that's how JPEGs work! We're applying the same principles to images – splitting up something into a bunch of sine waves, and then only storing the important ones.
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Now we're dealing with images, we need a different type of sine wave. We need to have something that no matter what image we have, we can add up a bunch of these sine waves to get back to our original image.
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp To do that, each of our sine waves will be images too. Instead of a wave that's a line, we now have images with black and white sections. To represent the size of a wave, each image will have more or less contrast.
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp We can also use these to represent color in the same way, but let's start with black-and-white images for now. To represent colorless images, we need some horizontal wave images,
+   <img src="pictures/jpg/1.png" alt="Horizontal Figure" style="display: block; margin: 0 auto; width: 40%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Along with some vertical wave images.
+   <img src="pictures/jpg/2.png" alt="Vertical Figure" style="display: block; margin: 0 auto; width: 40%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp By themselves, just horizontal and vertical images aren't enough to represent the types of images we get. We also need some extra ones that you get by multiplying the two together.
+   <img src="pictures/jpg/3.png" alt="Multiple Figure" style="display: block; margin: 0 auto; width: 40%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp For an 8x8 image, here are all the images we need.
+   <img src="pictures/jpg/4.png" alt="All Figures" style="display: block; margin: 0 auto; width: 40%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp If we take the images, adjust their contrast to the right amount, and then add them up we can create any image.
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Let's start with this letter 'A'. It's pretty small, but we need it to be small otherwise we'll end up with too many other images.
+   <img src="pictures/jpg/5.png" alt="A Figure" style="display: block; margin: 0 auto; width: 40%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp As we add more and more of these images, we end up with something that becomes closer and closer to the actual image. But I think you'll see the pattern here, as we get a reasonable approximation with just a few of them.
+   <img src="pictures/jpg/6.png" alt="A Component" style="display: block; margin: 0 auto; width: 40%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp For actual JPEG images there are just a few extra details.
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp The image gets broken up into 8x8 chunks, and each chunk gets split up separately. We use a set of frequencies to determine how light or dark each pixel is, and then another two sets for the color, one for red-green, and another for blue-yellow. The number of frequencies that we use for each chunk determines the quality of the JPEG.
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Here's a real JPEG image, zoomed in so we can see the details. When we play with the quality levels we can see this process happen.
+  </p>
+<div style="text-align: center;">
+    <img src="pictures/jpg/7.png" alt="Cat 1" style="display: inline-block; margin: 0 auto; width: 40%;">
+    <img src="pictures/jpg/8.png" alt="Cat 2" style="display: inline-block; margin: 0 auto; width: 40%;">
+    <img src="pictures/jpg/9.png" alt="Cat 3" style="display: inline-block; margin: 0 auto; width: 40%;">
+</div>
+<p>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp The JPEG part of the picture used for explanation can refer to this html document converted from Jupyter Notebook:<a href="dct.html">dct.html</a>。Of course, you can also refer to the original webpage author's <a href="https://github.com/Jezzamonn/fourier">github</a>。
+</p>
+<h1>Conclusion</h1>
+<p>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp So let's recap:
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<i>Fourier transforms are things that let us take something and split it up into its frequencies</i>
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<i>The frequencies tell us about some fundamental properties of the data we have</i>
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<i>And can compress data by only storing the important frequencies</i>
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<i>And we can also use them to make cool looking animations with a bunch of circles</i>
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp This is just scratching the surface into some applications. The Fourier transform is an extremely powerful tool, because splitting things up into frequencies is so fundamental. They're used in a lot of fields, including circuit design, mobile phone signals, magnetic resonance imaging (MRI), and quantum physics!
+</p>
+<h1>Questions for the Curious</h1>
+<p>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp You have learned some of the mathematics of the Fourier transform, especially the FFT, and have looked at some simple graphical demonstrations in the module's documentation. If you are interested in the mathematics behind it, here are some questions to help you consolidate or explore:
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<i>How do you mathematically represent a Fourier transform?</i>
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<i>What's the difference between a continuous time Fourier transform and a discrete time Fourier transform?</i>
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<i>How do you computationally do a Fourier transform?</i>
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<i>How do you do a Fourier transform of a whole song? (Rather than just a single note.)</i>
+</p>
+<h1>Further 'reading'</h1>
+<p>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp To learn more, some really good resources you can check out are:
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="https://betterexplained.com/articles/an-interactive-guide-to-the-fourier-transform/">An Interactive Guide To The Fourier Transform</a>A great article that digs more into the mathematics of what happens.
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="https://www.bilibili.com/video/BV1pW411J7s8/">But what is the Fourier Transform? A visual introduction.</a>A great video by 3Blue1Brown, also explaining the maths of Fourier transforms from an audio perspective.
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="https://alexmiller.phd/posts/fourier-series-spinning-circles-visualization/">A Tale of Math & Art: Creating the Fourier Series Harmonic Circles Visualization</a>Another article explaining how you can use epicycles to draw a path, explained from a linear algebra perspective.
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="https://en.wikipedia.org/wiki/Fourier_transform">Fourier transform (Wikipedia)</a>And of course, the Wikipedia article is pretty good too.
+</p>
+</body>
+</html>

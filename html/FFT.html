@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快速傅里叶变换入门</title>
+  <link rel="stylesheet" href="katex/katex.min.css">
+  <script defer src="katex/katex.min.js"></script>
+  <script defer src="katex/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\(', right: '\\)', display: false }
+      ]
+    });
+  });
+  </script>
+  <style>
+        .bordered-text {
+            border: 2px solid #000; 
+            padding: 10px; 
+            display: inline-block; 
+        }
+  </style>
+  <link rel="stylesheet" href="highlight/styles/default.min.css">
+  <script src="highlight/highlight.min.js"></script>
+  <script src="highlight/languages/matlab.js"></script>
+  <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+  </script>
+  <style>
+            pre, code {
+            font-size: 14px; 
+        }
+   </style>
+   <script>
+        function openInBrowser(event) {
+            event.preventDefault(); 
+            window.open(event.target.href, '_blank'); 
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', openInBrowser);
+            });
+        });
+    </script> 
+</head>
+<body>
+  <p style="font-size: 16px;">参考文章链接：
+  <a href="https://blog.csdn.net/zhang0558/article/details/136840352">信号处理之快速傅里叶变换(FFT)-通俗易懂</a></p>
+  <br/>
+  <h1>历史溯源</h1>
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp相信很多人知道傅里叶变换，但是很多人对傅里叶变换又是模棱两可的状态。故将傅里叶变换的前世今生探讨如下，以对傅里叶变换有个清晰的认识。
+  </p>
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp让·巴普蒂斯·约瑟夫·傅里叶（Baron Jean Baptiste Joseph Fourier，1768年3月21日—1830年5月16日），法国欧塞尔人，著名数学家、物理学家。1780年，就读于地方军校。1795年，任巴黎综合工科大学助教，跟随拿破仑军队远征埃及，成为伊泽尔省格伦诺布尔地方长官。1817年，当选法国科学院院士。1822年，担任该院终身秘书，后又任法兰西学院终身秘书和理工科大学校务委员会主席，敕封为男爵。主要贡献是在研究《热的传播》和《热的分析理论》，创立一套数学理论，对19世纪的数学和物理学的发展都产生了深远影响。1830年5月16日，在巴黎去世，时年六十三岁。其墓地现位于拉雪兹神父公墓。本文所讲述的傅里叶变换即以他命名。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp傅里叶生于法国中部欧塞尔（Auxerre）一个裁缝家庭，9岁时沦为孤儿，被当地一主教收养。1780年起就读于地方军校，1795年任巴黎综合工科大学助教，1798年随拿破仑军队远征埃及，受到拿破仑器重，回国后于1801年被任命为伊泽尔省格伦诺布尔地方长官。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp傅里叶早在1807年就写成关于热传导的基本论文《热的传播》，向巴黎科学院呈交，但经拉格朗日、拉普拉斯和勒让德审阅后被科学院拒绝，1811年又提交了经修改的论文，该文获科学院大奖，却未正式发表。傅里叶在论文中推导出著名的热传导方程，并在求解该方程时发现解函数可以由三角函数构成的级数形式表示，从而提出任一函数都可以展成三角函数的无穷级数。傅里叶级数（即三角级数）、傅里叶分析等理论均由此创始。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp傅里叶由于对传热理论的贡献于1817年当选为巴黎科学院院士。1822年，傅里叶终于出版了专著《热的解析理论》（Theorieanalytique de la Chaleur，Didot，Paris，1822年）。这部经典著作将欧拉、伯努利等人在一些特殊情形下应用的三角级数方法发展成内容丰富的一般理论，三角级数后来就以傅里叶的名字命名。傅里叶应用三角级数求解热传导方程，为了处理无穷区域的热传导问题又导出了当前所称的“傅里叶积分”，这一切都极大地推动了偏微分方程边值问题的研究。然而傅里叶的工作意义远不止此，它迫使人们对函数概念作修正、推广，特别是引起了对不连续函数的探讨；三角级数收敛性问题更刺激了集合论的诞生。因此，《热的解析理论》影响了整个19世纪分析严格化的进程。傅里叶1822年成为科学院终身秘书。
+  </p>
+  <h1>欧拉公式</h1>
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp欧拉公式是复分析领域的公式，它将三角函数与复指数函数关联起来，因其提出者莱昂哈德·欧拉而得名。欧拉公式被评为是世界上最伟大的十个公式之一。对于任意的实数 \(\phi\)，都有：$$e^{i\phi}=cos(\phi )+i\cdot sin(\phi )$$ &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp其中\(e\)是自然对数的底数，\(i\)是虚数单位，而\(cos\)和\(sin\)则是余弦、正弦对应的三角函数，参数 \(\phi\)则以弧度为单位的角度。如下图，在复数空间中，\(e^{i\phi}\) 可表示圆中任意一点，进而通过实部和虚部的组合，可以与复平面中任意一点一一对应。这样，通过欧拉公式就可以用指数形式把复平面表示出来，本身，傅里叶级数变换到频域后就是复数形式表示，这样就用一个指数形式就统一起来了。
+  </p>
+  <img src="pictures/eular_formula.png" alt="Eular Formula" style="display: block; margin: 0 auto; width: 20%; height: auto;">
+  <h1>傅里叶级数（FS）</h1>   
+  <p><b>（数学定义）</b></p>
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<b>傅立叶展开级数</b>：<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp它指出<b>任何周期连续的函数</b>都可以用正弦函数和余弦函数构成的无穷级数来表示。这种级数之所以被称为傅立叶级数，是因为它是由傅里叶提出的。傅里叶选择正弦函数与余弦函数作为基函数，原因在于它们是正交的。在代数中，我们用基底的线性组合可以表示任意的一组向量；在函数中，我们也可以用基底表示任意的函数。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp在代数中，我们希望基底是正交的，方便我们寻找线性组合的系数，例如正交单位向量\(\vec{i}=[1,0,0]\), \(\vec{j} = [0,1,0]\), \(\vec{k} =[0,0,1]\), 那么对于空间中中任意一个向量\(\vec{d}=[4,2,1]=4\vec{i}+2\vec{j}+\vec{k}\)来表示；在函数分解中，我们也希望基底是正交的。傅里叶用三角函数做了基底，比如$$\{sin \, t, cos \,  t, sin \,  2t, cos \,  2t, sin  \, 3t, … sin  \, nt, cos  \, nt\}$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp可以证明这组三角函数基底是正交函数基底， 同理任意一个周期函数可以通过三角函数这组基底表示，例如：\( f(x)=a\cdot sin \,  t+b\cdot cos \,  t\)。
+  </p>
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp那么，何为<b>内积</b>何为<b>正交</b>呢？ 两个平面向量正交的时候时垂直的，写成向量乘法就是 \(\vec{a} \cdot \vec{b}=0\) 。在学习了线性代数后，我们把它写成了\( \bar{X_{1}}\cdot \bar{X_{2}}^{T}=0 \)。这里的向量可以是任意维数的，比如\(\left ( X_{1}, X_{2}, X_{3}...X_{n} \right )\)。上面的点乘被称为求取向量的内积，即对应元素的求积累加，正交就是内积为0。那么，同理，一组正交函数基底的内积的正交性可以用积分形式表示：\(\int_{a}^{b} f_{1}(x)\cdot f_{2}(x) \, dx= 0\)，两函数正交，可把它叫做内积积分为0。这里函数基底可以是任意维数的，比如：\(\left( f_{1}(x) , f_{2}(x), f_{3}(x)... f_{n}(x) \right)\)。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp在代数中，向量在一个基底上的线性组合的系数可以用内积得到；在几何中，向量在一个基底上的线性组合的系数就是向量在该基底的投影，即<b>内积就是投影</b>。在函数中，我们用内积积分可以求得相应地系数，函数在一个基底上的系数也是在该基底上的投影。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp例如：向量 \(\vec{a}\)在一组基底 \(\left ( X_{1}, X_{2}, X_{3}...X_{n} \right )\)中的系数分别是\(\vec{a} \cdot  X_{1}\)，\( \vec{a} \cdot X_{2}\)，\(\vec{a} \cdot X_{3}\)，\(\cdots\)，\(\vec{a} \cdot X_{n}\)，其中\(\vec{a} \cdot X_{1} = \left | \vec{a} \right | \cdot \left | X_{1}\right | \cdot \cos (\theta )\)，这就是投影。
+  </p> 
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp同理，<b>傅里叶级数展开的系数</b>：对于任意函数\(f(x)\), 在正弦基底\(\left ( \sin(\frac{2\pi }{T}), \sin(\frac{4\pi }{T}), \sin(\frac{6\pi }{T}), \cdots , \sin(\frac{2n\pi }{T}) \right )\)和余弦基底\(\left ( \cos (\frac{2\pi }{T}), \cos (\frac{4\pi }{T}), \cos (\frac{6\pi }{T}), \cdots , \cos (\frac{2n\pi }{T}) \right )\)中展开得到，其中\(\omega_{0} = \frac{2\pi }{T}\),即我们所说的角频率或频率或最小分辨率，\(\frac{2n\pi }{T}\)为\(n\)倍倍频率。对于任意一个三角函数：\(A \cdot \sin (\omega_{0} \cdot x + b)\)，\(A\)即为振幅，\(\frac{2\pi }{T} = \omega_{0} \)是角频率，\(b\)为初相，\(\omega_{0} \cdot x + b\)为相位，这样，傅里叶级数展开后，幅频特性和相频特性就可以计算出来了。如下公式，可试着将\(n=1,2,3,…,N\)代入公式计算推演一下，由此可以看出<u>傅里叶级数展开的结果是非周期离散的</u>。
+$$f(x) = \frac{a_0}{2} + \sum_{n=1}^{\infty} \left( a_n \cos \left( \frac{2\pi n x}{T} \right) + b_n \sin \left( \frac{2\pi n x}{T} \right) \right)$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp其中：
+$$a_n = \frac{2}{T} \int_{x_{0}}^{x_{0}+T} f(x) \cos \left( \frac{2\pi n x}{T} \right) \, dx$$
+$$b_n = \frac{2}{T} \int_{x_{0}}^{x_{0}+T} f(x) \sin \left( \frac{2\pi n x}{T} \right) \, dx$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp用欧拉公式换算成指数形式：
+$$f(x) = \sum_{n=-\infty}^{\infty} c_n e^{i \frac{2\pi n x}{T}}$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp其中：
+$$c_n = \frac{1}{T} \int_{x_{0}}^{x_{0}+T} f(x) e^{-i \frac{2\pi n x}{T}} \, dx$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp注意：\(\frac{2\pi nx }{T} = \omega_{0} \cdot nx\)为相位，\(\omega_{0}\)是角频率或最小频率分辨率，\(\omega_{0} \cdot n\)为\(\omega_{0}\)的倍频。
+  </p>
+  <h1>傅里叶变换（FT）</h1>
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp在上一部分傅里叶级数(FS)中，是利用三角函数或指数形式表示周期连续的函数的方法，但是对于非周期连续的函数该怎么办呢，况且非周期连续的函数比周期连续的函数更普遍。这时候就有了傅里叶变换(FT)， 所谓傅里叶变换就是将傅里叶级数推广到非周期连续函数上。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp我们利用极限思想，假设连续非周期函数的周期为无穷大，整个定义域都在它的一个周期内，以至于它不可能再重复这一周期，这样，它就可以当作一个周期为无穷大的周期连续的函数了。形式上可表达为：\(f(x)\)的周期\(T\rightarrow\infty\), 由于\(\omega_{0} = \frac{2\pi }{T}\), 所以\(\omega_{0}\rightarrow 0\)，那么对于傅里叶级数：$$C_{n} = \frac{1}{T} \int_{x0}^{x0+T} f(x) \cdot e ^{-i \frac{2\pi }{T}nx} \, dx = C_{n} = \frac{1}{T} \int_{0}^{T} f(x) \cdot e ^{-in\omega_{0}  x} \, dx$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp也就是关于\(n\omega_{0}\)的函数\(C(n\omega_{0})\)，由于\(n\rightarrow\infty\), \(\omega_{0}\rightarrow 0\), \(n\omega_{0}\)也就从原来的离散角频率变成了连续的角频率，并且是有限大的值，我们令\(n\omega_{0}\)为\(\omega\), 原本傅里叶级数中在一个周期\(T\)内的积分，由于\(T\rightarrow\infty\)，就变成在无穷大范围内的积分，则有傅里叶变换公式：
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp$$C(\omega) = \int_{-\infty}^{\infty} f(x) \cdot e^{-i\omega x} \, dx$$
+$$f(x)= \frac{1}{2\pi} \int_{-\infty}^{\infty} C(\omega) \cdot e^{i\omega x} \, dx$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp由此公式可看出，\(C(\omega)\)是以频率为自变量的复数函数，<u>傅里叶变换的结果是非周期连续的</u>。
+  </p>    
+  <h1>离散傅里叶级数（DFS）</h1>
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp上面的部分我们理解了对于连续信号函数的傅里叶计算的结果，那么，在数字信号处理过程中，我们常常遇到的是离散信号，离散信号是从连续信号抽样而来，所以针对这种离散信号该怎么处理呢？这里，我们先探讨一下离散周期信号数据的傅里叶结果，也叫离散傅里叶级数(DFS)。利用抽样定理，我们同样可以从连续周期信号傅里叶级数的复指数形式导出周期序列的DFS。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp对连续周期信号\(f(x)\)，在一个周期\(T_{0}\)内采样\(N\)个点，即\(T_{0}=NT\)，\(\omega_{0} = \frac{2\pi}{T_{0}} =\frac{2\pi}{NT}\)，\(T\)为采样周期，这样就可以得到离散的周期序列：\(x[n]= x[n+mN]\)，其中，\(m\)为任意整数。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp假设，\(\Omega_{0} = \omega_{0}\cdot T= \frac{2\pi }{N}\)，为离散域内的角频率或最小频率分辨率，\(k\Omega_{0}\)是\(\Omega_{0}\)的\(k\)倍倍频，\(x = nT\)，\(d x = T\)，代入$$C_{n} = \frac{1}{T} \int_{0}^{T} f(x) \cdot e ^{-in\omega_{0} x} \, dx$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp则有：
+$$C_k = \frac{1}{NT} \sum_{n=0}^{N} x[nT] \cdot e^{-i k \frac{\Omega_0}{T} nT} \cdot T$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp化去周期\(T\), 则又可得到：
+$$C_k = \frac{1}{N} \sum_{n=0}^{N} x[n] \cdot e^{-i k \Omega_0 n}$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp同理可得到：
+$$x[n] = \sum_{k=0}^{N} C_k \cdot e^{i k \Omega_0 n}$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp从公式可以看出，<u>由于\(x[n]\)是离散周期的，所以离散傅里叶级数（DFS）结果是离散周期的</u>。
+  </p> 
+  <h1>离散时间傅里叶变换（DTFT）</h1>
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp上一部分，我们理解了离散周期信号的处理方式，那么，对于离散非周期信号该如何处理呢？DTFT 通过对连续时间非周期信号进行抽样，得到的信号再求傅里叶变换，就可以求得离散非周期信号的傅里叶结果，这就是所谓的“离散时间”的傅里叶变换。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp假设，\(T\)为采样周期，\(N\)为采样点，\(x = nT\)，\(dx = T\)，代入傅里叶变换(FT)$$C(\omega)= \int_{-\infty }^{\infty} f(x) *e ^{-i\omega x} \, dx$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp可得：
+ $$C(\omega ) = \sum_{-\infty }^{+\infty}x[n]e ^{-i\omega n}$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp如下图：由此可看出<u>离散非周期信号变换后是连续周期的</u>。
+  </p> 
+  <img src="pictures/dtft_example.png" alt="DTFT Example" style="display: block; margin: 0 auto; width: 40%; height: auto;">
+  <h1>离散傅里叶变换（DFT）</h1>
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp由于对于离散非周期信号进行变换后得到的频谱是连续周期的，这种连续周期的频谱在现实中我们是无法使用的，因此，我们需要将其在频谱上抽样，将频谱离散有限化，这样就有了离散傅里叶变换(DFT)。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp我们将频率\(\omega\)以\(\frac{2\pi}{N}\)等间隔离散化，\(N\)为周期内抽样点数，则DFT可由\(C(\omega ) = \sum_{-\infty }^{+\infty}x[n]e ^{-i\omega n}\)得出：
+$$C[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-i \frac{2\pi}{N} kn}$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp其中，\(k=0,1,2,3,...,N-1\)，\(k\)为频谱抽样点。
+$$x[n] = \sum_{n=0}^{N-1} x[n] \cdot e^{i \frac{2\pi}{N} kn}$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp其中，\(k=0,1,2,3,...,N-1\)，\(k\)为频谱抽样点。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp那么，我们的频谱和相位谱是怎么得到的呢？由上述公式\(C[k]\)，\(\frac{2\pi}{N}\)是由复指数形式表示，有实部和虚部。频谱的最小分辨频率为\(\frac{2\pi}{N}\)，\(N\)为一个DTFT周期内的抽样点数，\(\frac{2\pi}{N}k\)为最小分辨频率的\(k\)倍频，相位可由计算出的复指数的实部和虚部的反正切得到。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp如下图所示：
+  </p> 
+  <img src="pictures/dft_example.png" alt="DFT Example" style="display: block; margin: 0 auto; width: 40%; height: auto;">   
+  <p>
+<b>总结：</b><br/>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp1.各种信号时域和频域的关系（<b>连续对应非周期，离散对应周期</b>）
+  </p>
+  <table align="center" border="1" cellpadding="20" cellspacing="0" width="400" height="180">
+    <tr>
+      <th>时域</th>
+      <th>频域</th>
+    </tr> 
+    <tr>
+      <td>连续 、非周期性</td>
+      <td>非周期性、连续</td>
+    </tr>
+    <tr>
+      <td>连续 、周期性</td>
+      <td>非周期性、离散</td>
+    </tr>
+    <tr>
+      <td>离散 、非周期性</td>
+      <td>周期性、连续</td>
+    </tr>
+    <tr>
+      <td>离散 、周期性</td>
+      <td>周期性、离散</td>
+    </tr>
+  </table>
+  <p>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp2.各种信号的图形实例 
+  </p>
+  <img src="pictures/signals_example.png" alt="Signals Example" style="display: block; margin: 0 auto; width: 40%; height: auto;">   
+  <h1>快速傅里叶变换（FFT）</h1>
+  <p>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp上一部分我们理解了离散傅里叶变换(DFT)，但是，对于$$X[k] = \sum_{0 }^{N-1}x[n]e ^{-i\frac{2\pi}{N} kn}, k=0,1,2,3,...,N-1$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp我们令\(e ^{-i\frac{2\pi}{N}} kn = W_{N}^{kn}\)，则可得出：$$X[k] = \sum_{0 }^{N-1}x[n]W_{N}^{kn}, k=0,1,2,3,...,N-1$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp计算结果如下：
+$$\begin{align*}
+X(K) &= \sum_{n=0}^{N-1} x(n) W_N^{kn}, \quad k = 0, 1, 2, \ldots, N-1 \\
+&= \sum_{n=0}^{N-1} \left( \text{Re}[x(n)] + j \cdot \text{Im}[x(n)] \right) \cdot \left( \text{Re}[W_N^{kn}] + j \cdot \text{Im}[W_N^{kn}] \right) \\
+&= \sum_{n=0}^{N-1} \left( \text{Re}[x(n)] \cdot \text{Re}[W_N^{kn}] - \text{Im}[x(n)] \cdot \text{Im}[W_N^{kn}] \right) + j \left( \text{Re}[x(n)] \cdot \text{Im}[W_N^{kn}] + \text{Im}[x(n)] \cdot \text{Re}[W_N^{kn}] \right)
+\end{align*}$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp从以上公式的计算结果来看，计算一个\(X[k]\)需要\(N\)次复数乘法和\(N-1\)次复数加法，计算\(N\)点\(X[k]\)需要\(N^{2}\)次复数乘法和\(N(N-1)\)次复数加法，计算一次复数乘法需要4次实数乘法和2次实数加法，一次复数的加法需要2次实数的加法。所以，每计算一个\(X[k]\)需要\(4N\)次实数乘法和\(2N+2(N-1)\)次实数加法，计算\(N\)点\(X[k]\)需要\(4N^{2}\)次实数乘法和\(2N(2N-1)\)次复数加法。这在我们信号处理过程中，尤其是对于那种信号长的数据，其计算耗时是非常惊人的，因此，为了节省时间，快速傅里叶变换(FFT)就被提出来了也就是基2FFT/基4FFT等，<b>基2FFT在单片机平台中应用最广泛</b>，其大大减少了运算耗时。
+  </p> 
+  <p>
+	<b>基2FFT</b><br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp设输入信号的长度为\(N=2^{M}\)(\(M\)为整数)，利用二分法将该信号按照时间顺序分成奇数列和偶数列，并递归地分解，直至到奇数列或偶数列只有一个数据点，然后采用蝶形计算方法前向计算，称为按时间抽取的基2运算的FFT算法，也叫Coolkey-Tukey算法。如图所示，N点DFT->N/2点DFT->N/4点DFT…直到2点DFT的计算。这里，设定信号的长度必须是2的幂次，如果不是2的幂次，就在信号末尾补零，直至达到2的幂次。
+  </p> 
+  <img src="pictures/Radix-2_FFT_1.png" alt="Radix-2_FFT" style="display: block; margin: 0 auto; width: 40%; height: auto;">
+  <p style="font-size: 16px;">参考：</p>
+  <div class="bordered-text">
+       &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp首先分组，变量置换：
+$$X(K) = \sum_{n=0}^{N-1} x(n) W_N^{kn}, \quad k = 0, 1, 2, \ldots, N-1$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp将 \(x(n)\) 按 \(n\) 的奇偶性分为两组变量置换：
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp当\(n\)为偶数时，令
+$$n = 2r, \quad x(2r) = x_1(r), \quad r = 0, 1, 2, \ldots, \frac{N}{2} - 1$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp当\(n\)为奇数时，令
+$$n = 2r+1, \quad x(2r+1) = x_2(r), \quad r = 0, 1, 2, \ldots, \frac{N}{2} - 1$$
+$$X(K) = \sum_{r=0}^{\frac{N}{2}-1} x(2r) W_N^{k \cdot 2r} + W_N^k \sum_{r=0}^{\frac{N}{2}-1} x(2r + 1) W_N^{k \cdot (2r+1)}$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp有旋转因子的性质\(W_N^{k2r} = e^{-j\frac{2\pi}{N} \cdot 2kr} = e^{-j\frac{2\pi}{\frac{N}{2}} \cdot kr} = W_{\frac{N}{2}}^{kr}\)，所以，
+$$X(K) = \sum_{r=0}^{\frac{N}{2}-1} x(2r) W_{\frac{N}{2}}^{kr} + W_N^k \sum_{r=0}^{\frac{N}{2}-1} x(2r + 1) W_{\frac{N}{2}}^{kr}$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp令
+$$X_0(k) = \sum_{r=0}^{\frac{N}{2}-1} x(2r) W_{\frac{N}{2}}^{kr}, \quad X_1(k) = \sum_{r=0}^{\frac{N}{2}-1} x(2r + 1) W_{\frac{N}{2}}^{kr}, \quad X(K) = X_0(k) + W_N^k X_1(k), \quad k = 0, 1, 2, \ldots, \frac{N}{2} - 1$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp又根据\(W_N^{k+\frac{N}{2}}=W_N^{\frac{N}{2}} \cdot W_N^k = -W_N^k\)，将\(K+\frac{N}{2}\)代替\(K\)代入\(X(K)\)得到：
+$$X(K + \frac{N}{2}) = X_0(k) - W_N^k X_1(k), \quad k = 0, 1, 2, \ldots, \frac{N}{2} - 1$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp其中\(X(K)\)和\(X(K + \frac{N}{2})\)的式子称为蝶形运算，蝶形运算流图符号如下所示：
+  <img src="pictures/Radix-2_FFT_2.png" alt="Radix-2_FFT" style="display: block; margin: 0 auto; width: 20%; height: auto;">
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp对蝶形运算进行说明：（1）左边两路为输入；（2）右边两路为输出；（3）中间以一个小圆表示加、减运算（右上为相加输出，右下为相减输出）。一次蝶形运算需要1次复乘和2次复加。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp此时，一个\(N\)点的DFT可以转换为2个\(\frac{N}{2}\)DFT，再经过第二次分解，又将\(\frac{N}{2}\)点DFT分解成2个\(\frac{N}{4}\)点DFT，以此类推，经过\(M\)次分解，最后将\(N\)点FFT分解成\(N\)个1点DFT和\(M\)级蝶形运算，而1点DFT就是时域序列本身。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp对于基2的时间抽取，分解到最后一级，就是两点的时域序列，两点序列求DFT，用下面的表达式：
+$$X[0] = x[0] + \omega_2^0 x[1], \quad X[10] = x[0] - \omega_2^0 x[1]$$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp即：
+$$X[0] = x[0] + x[1], \quad X[1] = x[0] - x[1]$$
+  </div> 
+  <p></p>
+  <div class="bordered-text">
+<b>FFT算法流图旋转因子\(W_N^P\)规律</b><br/>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp第一级蝶形系数均为\(W_N^0\)，蝶形节点的距离为1。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp第二级蝶形系数为\(W_N^0, \quad W_N^{\frac{N}{4}}\)，蝶形节点的距离为2。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp第三级蝶形系数为\(W_N^0, \quad W_N^{\frac{N}{8}}, \quad W_N^{\frac{2N}{8}}, \quad W_N^{\frac{3N}{8}}\)，蝶形节点的距离为4。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp第\(M\)级蝶形系数为\(W_N^0, \quad W_N^1, \quad \cdots, \quad W_N^{(\frac{N}{2} -1)}\)，蝶形节点的距离为\(\frac{N}{2}\)。
+  </div>
+  <p>
+<b>4点基2FFT实例计算流程：</b>
+<img src="pictures/Radix-2_FFT_3.jpg" alt="Radix-2_FFT" style="display: block; margin: 0 auto; width: 40%; height: auto;">
+  </p>
+  <p>
+<b>8点实例基2FFT计算流程：</b>
+<img src="pictures/Radix-2_FFT_4.png" alt="Radix-2_FFT" style="display: block; margin: 0 auto; width: 40%; height: auto;">
+  </p>
+  <h1>MATLAB中常用的FFT工具</h1>
+  <p>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp1.\(fft(X)\)，\(fft(X,N)\)。其中，\(X\)为输入信号序列，\(N\)为要计算的fft点数。MATLAB中的fft函数是利用DFT算法计算的，也就是说，\(fft(X)\)默认计算的fft点数为X信号序列的长度，也可用\(fft (X,N)\)指定计算fft点数。如下代码示例：
+  </p>
+  <pre>
+    <code class="language-matlab">
+close all;
+clear ;
+Fs = 1000;           % 采样频率为1000
+t = 0:1/Fs:1-1/Fs;    % 时间向量
+x = 0.7*sin(2*pi*50*t) +0.9*sin(2*pi*100*t)+ 0.3*sin(2*pi*200*t); % 生成频率为50,100,200的叠加信号
+N = length(x);
+
+% FFT变换
+Y = fft(x);
+% 计算频率轴
+f = Fs*(0:(N/2))/N;
+%功率
+power = abs(Y).^2/N; 
+% 绘制频谱
+figure
+plot(f, power(1:N/2+1));
+title('FFT of Windowed Signal');
+xlabel('Frequency (Hz)');
+ylabel('power');
+    </code>
+  </pre>
+  <img src="pictures/matlab_fft.png" alt="MATLAB FFT" style="display: block; margin: 0 auto; width: 35%; height: auto;">
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp2.\([pxx,f] = pwelch(X,window,noverlap,NFFT,fs)\)主要是采用的分段周期图法计算功率谱估计。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp \(x\)是一维的信号数据。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp \(window\)是计算功率谱每个窗口的信号长度，关于窗函数的长度选择可以参考公式，选择的窗口越长，越能分辨低频的信号，\(noverlap\)是函数内部每段fft计算窗口之间重叠的长度，通常取33%~50%。窗口之间重叠得越多，图像越平滑（blurred）；反之则更粗糙（blocky）。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\(NFFT\)，即FFT数据点的个数，可以变化。但是最大长度不能超过每一段的点数。当然，通常设置\(NFFT\)为大于每一段的点数的最小2次幂，这样可以得到最高的频域分辨率。\(NFFT\)越小，最终会越粗糙。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\(fs\)是采样频率，最终的结果，横坐标的最大值为采样频率的一半。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp功率谱密度(Power Spectral Density, PSD)是一种信号分析方法，分析时间序列时，可利用PSD将时域信号转换到频域，直观的观察功率与频率的函数关系。通俗的说，PSD显示了在哪些频率数据变化/波动大，对于进一步分析可能很有用。
+  </p>
+  <p>
+<b>分段周期图法估计PSD</b>
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp分段周期图法是在周期图法的基础上，为了减少结果的方法而出现的。其过程：将长度为\(N\)的采样数据分为\(K\)段，每一段由\(M\)个样本组成，分别计算每一段的FFT，对结果进行平均（目的是减少方差）。但这样做也导致功率谱的分辨率降低了。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp其计算公式如下：
+$$I_{M}^{(i)}(kf_{\Delta}) = \frac{1}{U} \left| \sum_{n=0}^{M-1} x^{(i)} [n] w[n] e^{-j2\pi kf_{\Delta} n} \right|^2 \quad i = 1, 2, \cdots, K $$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp其中，\(x^{(i)} [n]\)代表第\(i\)段数据记录中的样本，\(w[n]\)为窗函数，\(f_{\Delta} = \frac{f_i}{M}\)为频率分辨率，然后，对\(K\)个周期图进行平均，得到PSD估计值：
+$$\hat{S}(kf_{\Delta}) = \frac{1}{K} \sum_{i=1}^{K} I_{M}^{(i)}(kf_{\Delta}), \quad k = 0, 1, \cdots, M-1 $$
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp其中，\(I_{M}^{(i)}(kf_{\Delta})\)为第\(i\)段数据的周期图，\(\hat{S}(kf_{\Delta})\)为功率谱密度（PSD）的估计值。 
+  </p>
+<pre>
+    <code class="language-matlab">
+close all;
+clear ;
+Fs = 1000;           % 采样频率为1000
+t = 0:1/Fs:1-1/Fs;    % 时间向量
+x = 0.7*sin(2*pi*50*t) +0.9*sin(2*pi*100*t)+ 0.3*sin(2*pi*200*t); % 生成频率为50,100,200的叠加信号
+N = length(x);
+
+K = 2;                      %把1000个点分为2段
+M = N/K;                     %M为每一段加窗的点数
+
+[pxx,fxx] = pwelch(x,hanning(M),0,N,Fs);
+plot(fxx,pxx);
+grid;
+xlabel('Frequency ,Hz')
+ylabel('pwelch函数估计的PSD ,dB')
+    </code>
+  </pre>
+  <img src="pictures/psd_figure.png" alt="PSD Figure" style="display: block; margin: 0 auto; width: 35%; height: auto;">
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp3.\([pxx,f] = plomb(x,t)\)。\(x\)为输入的信号，\(t\)为对应的时间序列。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\(plomb\)是非均匀采样信号经常出现在汽车工业、通信以及医学和天文学等领域。非均匀采样可能是由于传感器不完善、时钟不匹配或事件触发现象造成的。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp频谱内容的计算和研究是信号分析的重要部分。传统的频谱分析方法都要求输入信号均匀采样。当采样非均匀时，可以对信号进行重采样或插值到均匀采样网格上。然而，这会给频谱增加不需要的伪影，并可能导致分析误差。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp更好的替代方法是使用隆布-斯卡格尔方法，该方法直接处理非均匀采样，因此不需要重采样或插值。该算法已在\(plomb\)函数中实现。具体原理，有待探讨。用在天文学中比较多。
+  </p>
+  <h1>FFT中常见的问题</h1><h2>1.频率混叠</h2>
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp对连续信号进行等时间采样时，如果采样频率不满足采样定理，采样后的信号频率就会发生混叠，即高于奈奎斯特频率（采样频率的一半）的频率成分将被重构成低于奈奎斯特频率的信号。这种频谱的重叠导致的失真称为混叠，也就是高频信号被混叠成了低频信号。<b>采样定理</b>，又称香农采样定理，奈奎斯特采样定理，只要采样频率大于或等于有效信号最高频率的两倍，采样值就可以包含原始信号的所有信息，被采样的信号就可以不失真地还原成原始信号。如下图红色是真实信号，蓝色为采样信号，由于不满足采样定理，严重失真。
+  </p>
+  <img src="pictures/frequency_mixed.png" alt="Frequency Mixed" style="display: block; margin: 0 auto; width: 35%; height: auto;">
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp举例：<b>为了避免发生频率混叠，我们在对有效信号进行降采样的操作时，一定要注意必须先经过低通滤波到有效信号范围内，再降采样到合理范围</b>。 比如如下图所示，随机生成频率为30,100,200的叠加信号，原始信号采样率是1000Hz，那么根据采样定理，采集到的有效信号频率范围为0–500Hz，如果此时我要将原始信号1000Hz降采样到100Hz，那么，由采样定理得出100Hz最多只能采集到有效信号的频率范围为0–50Hz, 那么，我要先将原始信号经过一个50Hz的低通滤波器，再4点求均值降采样到100Hz。但是，如果我要直接降采样，则会导致信号严重失真，请看下图第二行和第三行的信号差别。
+  </p>
+<pre>
+    <code class="language-matlab">
+close all;
+clear ;
+
+Fs = 1000;           % 采样频率为1000
+t = 0:1/Fs:1-1/Fs;    % 时间向量
+x = 0.7*sin(2*pi*30*t) +0.9*sin(2*pi*100*t)+ 0.3*sin(2*pi*200*t); % 生成频率为30,100,200的叠加信号
+N = length(x);
+
+% FFT变换
+Y = fft(x);
+ 
+% 计算频率轴
+f = Fs*(0:(N/2))/N;
+ 
+%功率
+power = abs(Y).^2/N; 
+figure
+subplot(321)
+plot(x)
+title('1000Hz采样信号');
+xlabel('时间');
+ylabel('幅值');
+subplot(322)
+plot(f, power(1:N/2+1));
+title('FFT结果');
+xlabel('频率');
+ylabel('功率');
+
+fsr = 100;
+x1 = resample(x, fsr,Fs);
+t1 = 0:1/fsr:1-1/fsr;
+N = length(x1);
+
+% FFT变换
+Y = fft(x1);
+ 
+% 计算频率轴
+f = fsr*(0:(N/2))/N;
+ 
+%功率
+power = abs(Y).^2/N; 
+
+subplot(323)
+plot(x1)
+title('直接将采样到100Hz信号');
+xlabel('时间');
+ylabel('幅值');
+subplot(324)
+plot(f, power(1:N/2+1));
+title('FFT结果');
+xlabel('频率');
+ylabel('功率');
+
+[bb, aa]    = butter(4, 50*2/Fs,'low');    % 50Hz低通滤波
+data1        = filter(bb, aa, x);
+fsr = 100;
+x1 = resample(data1, fsr,Fs);
+t1 = 0:1/fsr:1-1/fsr;
+N = length(x1);
+
+% FFT变换
+Y = fft(x1);
+% 计算频率轴
+f = fsr*(0:(N/2))/N;
+%功率
+power = abs(Y).^2/N; 
+subplot(325)
+plot(x1)
+title('先50Hz低通滤波再降采样到100Hz信号');
+xlabel('时间');
+ylabel('幅值');
+subplot(326)
+plot(f, power(1:N/2+1));
+title('FFT结果');
+xlabel('频率');
+ylabel('功率');
+    </code>
+  </pre>
+  <img src="pictures/sample_signal.png" alt="Sample Signal" style="display: block; margin: 0 auto; width: 40%; height: auto;">
+  <h2>2.频谱泄露</h2>
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp所谓频谱泄漏，就是信号频谱中各频率之间相互影响，使测量结果偏离实际值，同时在各频率邻近两侧其他频率点上出现一些幅值较小的假谱。 造成这种情况主要有两个原因：第一个就是: 最小分辨频率不是\(\frac{Fs}{N}\)的整数倍(其中\(Fs\)为采样率，\(N\)为采样点)，因为离散傅里叶变换DFT只能输出在\(\frac{Fs}{N}\)的频率点上的功率，所以当输入频率不在\(\frac{Fs}{N}\)的整数倍时，在dft的输出上就没有与输入频率相对应得点(dft输出是离散的)，那么输入频率就会泄漏到所有的输出点上，具体的泄漏分布取决于所采用的窗的连续域复利叶变换。第二个就是: 矩形窗，对于直接对信号进行FFT，就相当于对信号加了矩形窗，矩形窗本身就会产生一定的泄漏。信号为无限长序列，运算需要截取其中一部分（截断），于是需要加窗函数，加了窗函数相当于时域相乘，于是相当于频域卷积，于是频谱中除了本来该有的主瓣之外，还会出现本不该有的旁瓣，这就是频谱泄露！为了减弱频谱泄露，可以扩大窗函数的宽度，可以采用加权的窗函数，加权的窗函数包括汉明窗、汉宁窗、高斯窗等等。如下图所示，随机生成频率为30,100,200的叠加信号，原始信号采样率是1000Hz，直接在末尾补1000个零，然后经过FFT，会出现频谱泄露，30Hz,100Hz,200Hz旁瓣多了很多新的谱线，而在1000Hz信号先加窗后末尾补零的情况下频谱泄漏的情况缓解了很多。因此，<b>在补零的操作之前一定先要加个窗</b>。
+  </p>
+  <pre>
+    <code class="language-matlab">
+Fs = 1000;           % 采样频率为1000
+t = 0:1/Fs:1-1/Fs;    % 时间向量
+x = 0.7*sin(2*pi*50*t) +0.9*sin(2*pi*100*t)+ 0.3*sin(2*pi*200*t); % 生成频率为50,100,200的叠加信号
+N = length(x);
+% FFT变换
+Y = fft(x,N);
+ 
+% 计算频率轴
+f = Fs*(0:(N/2))/N;
+%功率
+power = abs(Y)/N; 
+figure
+subplot(321)
+plot(x);
+title('1000Hz信号');
+xlabel('时间');
+ylabel('幅度');
+subplot(322);
+plot(f, power(1:N/2+1));
+title('FFT结果');
+xlabel('频率');
+ylabel('幅值');
+
+Fs = 1000;           % 采样频率为1000
+t = 0:1/Fs:1-1/Fs;    % 时间向量
+x = 0.7*sin(2*pi*50*t) +0.9*sin(2*pi*100*t)+ 0.3*sin(2*pi*200*t); % 生成频率为50,100,200的叠加信号
+x = [x,zeros(1,length(t))];
+N = length(x);
+% FFT变换
+Y = fft(x,N);
+ 
+% 计算频率轴
+f = Fs*(0:(N/2))/N;
+%功率
+power = abs(Y)/N; 
+subplot(323)
+plot(x);
+title('1000Hz信号末尾补零');
+xlabel('时间');
+ylabel('幅度');
+subplot(324);
+plot(f, power(1:N/2+1));
+title('FFT结果');
+xlabel('频率');
+ylabel('幅值');
+
+
+Fs = 1000;           % 采样频率为1000
+t = 0:1/Fs:1-1/Fs;    % 时间向量
+x = 0.7*sin(2*pi*50*t) +0.9*sin(2*pi*100*t)+ 0.3*sin(2*pi*200*t); % 生成频率为50,100,200的叠加信号
+N = length(x);
+
+% % 加汉明窗
+window = hanning(N);
+x = x .* window';
+
+x = [x,zeros(1,N)]; %末尾补length(x)个零
+N = length(x);
+
+% FFT变换
+Y = fft(x,N);
+ 
+% 计算频率轴
+f = Fs*(0:(N/2))/N;
+%功率
+power = abs(Y)/N; 
+subplot(325)
+plot(x);
+title('1000Hz信号先加窗后末尾补零');
+xlabel('时间');
+ylabel('幅度');
+subplot(326);
+plot(f, power(1:N/2+1));
+title('FFT结果');
+xlabel('频率');
+ylabel('幅值');
+    </code>
+  </pre>
+  <img src="pictures/spectrum_leakage.png" alt="Spectrum Leakage" style="display: block; margin: 0 auto; width: 40%; height: auto;">
+  <h2>3.栅栏效应</h2>
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp在进行DFT的过程中，最后需要对信号的频谱进行采样。经过这种采样所显示出来的频谱仅在各采样点上，而不在此类点上的频谱都显示不出来，即在其他点上有重要的峰值也会被忽略，这就是栅栏效应。也就是说，由于对频谱离散采样，有些重要的频率点未被采样到，结果丢失了重要的频率信息。就像栅栏一样，栅栏缝隙越宽，能拦住的东西越少，栅栏缝隙越窄，能拦住的东西越多，所以要想化解这种问题就要提高频率分辨率。即可<b>通过信号加窗末尾补零的方法提高采样点数，进而提高频率分辨率</b>。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp不管是时域采样还是频域采样，都有相应的栅栏效应。只是当时域采样满足采样定理时，栅栏效应不会有什么影响。而频域采样的栅栏效应则影响很大，“挡住”或丢失的频率成分有可能是重要的或具有特征的成分，使信号处理失去意义。减小栅栏效应可用提高采样间隔也就是频率分辨力的方法来解决。间隔小，频率分辨力高，被“挡住”或丢失的频率成分就会越少。但会增加采样点数，使计算工作量增加。
+<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp举例：如下图所示采样率为1000，采样了1000个点，生成频率为50,70.5,200的叠加信号，由于第一行信号的频率分辨率为\(\frac{Fs}{N}\)=1Hz，因此对于在频率为70.5Hz的点在FFT结果后就会出现畸变，丢失了频率成分，发生了栅栏效应。第二行，通过末尾补零，有效缓解了栅栏效应，但有些频率泄露。第三行是先加hamming窗再补零，效果明显改善了很多。
+  </p>
+  <pre>
+    <code class="language-matlab">
+Fs = 1000;           % 采样频率为1000
+t = 0:1/Fs:1-1/Fs;    % 时间向量
+x = 0.7*sin(2*pi*50*t) +0.9*sin(2*pi*70.5*t)+ 0.3*sin(2*pi*200*t); % 生成频率为50,70.5,200的叠加信号
+N = length(x);
+% FFT变换
+Y = fft(x,N);
+ 
+% 计算频率轴
+f = Fs*(0:(N/2))/N;
+%功率
+power = abs(Y)/N; 
+figure
+subplot(321)
+plot(x);
+title('1000Hz信号');
+xlabel('时间');
+ylabel('幅度');
+subplot(322);
+plot(f, power(1:N/2+1));
+title('FFT结果');
+xlabel('频率');
+ylabel('幅值');
+
+Fs = 1000;           % 采样频率为1000
+t = 0:1/Fs:1-1/Fs;    % 时间向量
+x = 0.7*sin(2*pi*50*t) +0.9*sin(2*pi*70.5*t)+ 0.3*sin(2*pi*200*t); % 生成频率为50,70.5,200的叠加信号
+x = [x,zeros(1,length(t))];
+N = length(x);
+% FFT变换
+Y = fft(x,N);
+ 
+% 计算频率轴
+f = Fs*(0:(N/2))/N;
+%功率
+power = abs(Y)/N; 
+subplot(323)
+plot(x);
+title('1000Hz信号末尾补零');
+xlabel('时间');
+ylabel('幅度');
+subplot(324);
+plot(f, power(1:N/2+1));
+title('FFT结果');
+xlabel('频率');
+ylabel('幅值');
+
+
+Fs = 1000;           % 采样频率为1000
+t = 0:1/Fs:1-1/Fs;    % 时间向量
+x = 0.7*sin(2*pi*50*t) +0.9*sin(2*pi*70.5*t)+ 0.3*sin(2*pi*200*t); % 生成频率为50,70.5,200的叠加信号
+N = length(x);
+
+% % 加汉明窗
+window = hanning(N);
+x = x .* window';
+
+x = [x,zeros(1,N)]; %末尾补length(x)个零
+N = length(x);
+
+% FFT变换
+Y = fft(x,N);
+ 
+% 计算频率轴
+f = Fs*(0:(N/2))/N;
+%功率
+power = abs(Y)/N; 
+subplot(325)
+plot(x);
+title('1000Hz信号先加窗后末尾补零');
+xlabel('时间');
+ylabel('幅度');
+subplot(326);
+plot(f, power(1:N/2+1));
+title('FFT结果');
+xlabel('频率');
+ylabel('幅值');
+    </code>
+  </pre>
+  <img src="pictures/fence_effect.png" alt="Fence Effect" style="display: block; margin: 0 auto; width: 40%; height: auto;">
+  <h2>4.旁瓣效应</h2>
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp在时域中可采用不同的窗函数来截断信号，让两侧旁瓣的高度趋于零，而使能量相对集中在主瓣，就可以较为接近于真实的频谱。但是加窗本身也会增加误差，加不同的窗函数导致能量的不同分配，因此窗的选择依赖于输入信号的类型，以及测试人员感兴趣的问题属于哪个方面。<b>我们在加窗函数时，最理想的情况是使窗函数频谱的主瓣宽度应尽量窄（频率分辨率高），旁瓣衰减应尽量大（频谱拖尾小）但实际上我们需要做一个选择题。“鱼与熊掌不可兼得”，这两个参数处在跷跷板的两端，我们在加窗时只能更顾及其中一点。</b> 如下图，分别是各种窗的时域和频域图形，主瓣是中间突起部分，旁瓣是两侧抑制部分，衰减部分越严重，主瓣频率越集中。信号直接经过FFT变换后，相当于加了矩形窗，如下图矩形窗，主瓣较窄，旁瓣衰减部分不强，因此可能会导致频谱泄露。另外，<b>对于非常邻近的频率分析，比如频率分辨率为0.1Hz，那么加主瓣宽的窗后1Hz和1.1Hz的表现就不明显，这时要选择主瓣窄的窗进行分析</b>。
+   </p> 
+   <img src="pictures/window.png" alt="Window Function" style="display: block; margin: 0 auto; width: 40%; height: auto;">
+   <h2>5.总结</h2>
+  <p>
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<b>针对采样过程，一定要注意频率混叠，尤其是降采样的时候，一定要先低通滤波再降采样，这是常规操作。
+针对频谱泄露需要选择合适的窗来加窗；针对栅栏效应，一定要加窗后再补零，这也是常规操作。</b>
+  </p>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>方式1</title>
+  <link rel="stylesheet" href="katex/katex.min.css">
+  <script defer src="katex/katex.min.js"></script>
+  <script defer src="katex/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\(', right: '\\)', display: false }
+      ]
+    });
+  });
+  </script>
+  <style>
+        .bordered-text {
+            border: 2px solid #000; 
+            padding: 10px; 
+            display: inline-block; 
+        }
+  </style>
+  <link rel="stylesheet" href="highlight/styles/default.min.css">
+  <script src="highlight/highlight.min.js"></script>
+  <script src="highlight/languages/matlab.js"></script>
+  <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+  </script>
+  <style>
+            pre, code {
+            font-size: 14px; 
+        }
+   </style>
+   <script>
+        function openInBrowser(event) {
+            event.preventDefault(); 
+            window.open(event.target.href, '_blank'); 
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', openInBrowser);
+            });
+        });
+    </script> 
+</head>
+<body>
+<p style="font-size: 16px;">引用程序来源：
+  <a href="https://github.com/TheKOG/Fourier_Draw">傅里叶变换画图github</a></p>
+<p style="font-size: 16px;">参考视频链接：
+  <a href="https://www.bilibili.com/video/BV1mt411P7ZU/">bilibili视频</a></p>
+  <br/>
+<h1>项目使用流程: </h1>
+<p>
+1. 运行kruskal.exe<br/>
+
+2. 按照流程输入图片路径(bmp格式)和梯度阀值(默认为200)<br/>
+
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp注: 阀值越高, 轮廓越稀疏<br/>
+
+3. 运行fourier.exe<br/>
+
+4. 按F5开始绘制
+</p>
+<h1>fourier.exe使用进阶教程:</h1>
+<p>
+1. 按顺序点击屏幕形成点阵<br/>
+
+2. 按Z撤销一个点<br/>
+
+3. 按X恢复一个点<br/>
+
+4. 按Esc清除所有点<br/>
+
+5. 按F5开始/结束绘制<br/>
+
+6. 按F1显示/隐藏点阵<br/>
+
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp注: 绘制时, 程序默认不显示点阵, 此时按F1以显示点阵<br/>
+
+7. 按F2隐藏/显示矢量<br/>
+
+8. 按空格暂停绘制<br/>
+
+9. 可以修改data.in以设置初始点阵<br/>
+
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp注: kruskal.exe会将运算结果输出到data.in中
+</p>
+
+<h1>编译指令</h1>
+<p>
+对于kruskal.cpp:	g++ kruskal.cpp -o kruskal -lgdi32<br/>
+
+对于fourier.cpp: 	g++ fourier.cpp -o fourier -lgdi32 -mwindows <br/>
+</p>
+<h1>算法介绍</h1>
+<p>
+对于kruskal.cpp:	边缘算子, Delaunay三角剖分算法, kruskal最小生成树算法, Douglas-Peucker算法;<br/>
+
+对于fourier.cpp:	快速傅里叶变换算法, 逆离散傅里叶变换算法;<br/>
+</p>
+<h1>版权声明</h1>
+<p>
+原作者见文初链接。
+</p>
+</body>
+</html>

@@ -1,0 +1,22 @@
+This is my course design work for MATLAB GUI course in 2025 spring. Aim to use Arduino sevices to implement a simple FFT learning.
+
+The main interface of this App is divided into the following 9 columns, and the main functions they implement are as follows:
+(1) FFT theory:
+Displays relevant documents of FFT, including historical origin, Euler formula, FS (Fourier series), FT (Fourier transform), DFS (discrete Fourier series), DTFT (discrete time Fourier transform), DFT (discrete Fourier transform), FFT, commonly used FFT tools in MATLAB and common problems of FFT.
+(2) Figure example:
+Displays the Fourier transform related images of square waves; draws the dynamic image of the Fourier transform of closed figures in real time; displays the documents of the application of FFT (including DFT and other related contents) in graphics.
+(3) Picture FFT:
+Two methods can be selected for the application of FFT in images. Method 1: Based on C++, extract the contour of jpg/png/bmp images and provide dynamic display of Fourier circles; Method 2: Based on Python (Python interpreter is required on the PC), extract the hard edge or single path svg of jpg/png, perform fast Fourier transform on the path, render the image through the processing program, and manually adjust 5 related parameters.
+(4) Audio FFT:
+Implement a simple music player interface, and draw the waveform and spectrum of the song based on FFT; implement vocal enhancement based on FFT; play songs played by different built-in instruments, and analyze the harmonic structure of different instruments through FFT.
+(5) Sound signal process:
+Provide a method to automatically obtain available ports and connect to the Arduino serial port; provide a line connection method for Arduino Uno (based on sound sensor); display the dynamic image of waveform, spectrum and silence detection through FFT, and dynamically update the parameter table; implement silence filtering; implement audio voice change processing (convert the original audio into male, female, cartoon or machine voice based on FFT), and the recording device supports Arduino Uno and PC microphone.
+(6) Light signal process:
+Provides a method to automatically obtain available ports and connect to the Arduino serial port; provides a line connection method for Arduino Uno (based on photosensors); collects optical signals and updates the parameter table in real time; displays waveforms and spectrum diagrams based on FFT.
+(7) Real-time music game:
+Import songs and analyze their main frequencies; simulate the notes of songs based on FFT and implement the music game interface.
+(8) Interactive practice:
+Users complete 10 FFT-related test questions and the answers can be displayed.
+(9) Export data:
+Some documents, images, parameter tables, etc. involved in the above modules can be exported.
+In addition, the sidebar also provides related instruction document display, language switching, image import, audio import, obtaining the Python interpreter of the PC, viewing the Arduino program, and other functions, and supports interface size scaling.

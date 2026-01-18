@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>way 2</title>
+  <link rel="stylesheet" href="katex/katex.min.css">
+  <script defer src="katex/katex.min.js"></script>
+  <script defer src="katex/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\(', right: '\\)', display: false }
+      ]
+    });
+  });
+  </script>
+  <style>
+        .bordered-text {
+            border: 2px solid #000; 
+            padding: 10px; 
+            display: inline-block; 
+        }
+  </style>
+  <link rel="stylesheet" href="highlight/styles/default.min.css">
+  <script src="highlight/highlight.min.js"></script>
+  <script src="highlight/languages/matlab.js"></script>
+  <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+  </script>
+  <style>
+            pre, code {
+            font-size: 14px; 
+        }
+   </style>
+   <script>
+        function openInBrowser(event) {
+            event.preventDefault(); 
+            window.open(event.target.href, '_blank'); 
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', openInBrowser);
+            });
+        });
+    </script> 
+</head>
+<body>
+<p style="font-size: 16px;">Reference program source:
+<a href="https://github.com/ruanluyu/FourierCircleDrawing">FourierCircleDrawing github</a></p>
+<p style="font-size: 16px;">Reference video link:
+<a href="https://www.bilibili.com/video/av28374720/">bilibili video (1000 satellite orbits drawing Hatsune Miku)</a></p>
+<br/>
+<h1>Description</h1>
+<p>The program connected to this app is rewritten by me based on the original author of the project linked above. The module for importing svg images basically uses the main program of the original author. On this basis, it adds the resizing of svg images and the reading of svg paths, and can pass in three parameters such as the Fourier coefficient calculation threshold, the Fourier circle rotation speed, and whether to clear the existing orbits when redrawing. The relevant mathematical principles are as follows:
+</p>
+<embed src="Report.pdf" type="application/pdf" width="100%" height="600px" />
+<p>In fact, the original author's implementation method has many limitations: First, you need to use Adobe Illustrator to extract the svg path of the image and copy it to a txt document. For specific extraction methods, please refer to the bilibili video <a href="https://www.bilibili.com/video/BV1d4411d7js/">Use Fourier series to draw a place farther than the universe</a>. The svg extracted in this process must be a single path connected from beginning to end, otherwise the subsequent Python program can only extract the Fourier coefficients of the first path or the processing program execution effect is inconsistent with the original image. This is not easy to achieve. Then run the Python program, export the data file, read it through the processing program, and dynamically render it on the canvas to get the effect.
+</p>
+<p>The module for importing jpg/png has been greatly changed. Its core is to read the contour points and convert them into svg paths containing only M and L paths. First, according to the different sizes of the pictures, the pictures are divided into two categories: one category has a width and height that are smaller than the built-in processing screen size of 1920x1080; the other category is the opposite. The first category of pictures is first enlarged to match the size of 1920x1080, and then the hard edges of the pictures are extracted through Python's opencv library (opencv does not support Chinese paths, so this app must be in English paths), and then the exported png contour map is converted to svg using svgwrite and opencv libraries to obtain svg images. The other category of pictures first performs canny hard edge extraction, converts to svg, and then shrinks to match the size of 1920x1080 based on svg. In the above implementation process, whether to connect different paths for fitting is determined based on the parameters passed in for curve fitting. The SVGs obtained from the two types of images are converted into SVGs with different paths adjacent to each other through Python programs (using libraries such as svgwrite and numpy), and then the SVG paths are exported as txt files in a certain format through the svgpathtools library (when exporting, in order to connect the paths from beginning to end, each path is reversed and then spliced ​​with the original path). The Python main program reads the txt file and dynamically uses the CPU or GPU for calculation according to whether there is pytorch in the environment, and then exports the Fourier coefficients of each path. Finally, the processing program reads the data and renders the image (jumps to the next path when the parameter t in the program is greater than \(\pi\), that is, the path is multiplied first, and then cut in half when the image is rendered).
+</p>
+<p>The main idea of ​​the implementation of this module is given by me. Its advantage is that it can handle complex images with multiple paths and directly operate on common jpg and png format images. The disadvantage is that it can only generate SVG containing only M and L paths. The actual paths are all discrete points or polylines, which will lead to problems such as excessive sampling and uneven sampling. In the case of particularly complex images, it is easy to overfit or the program calculation efficiency is too low (even if GPU acceleration is used).
+</p>
+<p><b>Please first unzip the processing package in the lower left corner (or make sure there is a processing program on your PC), and import the Python interpreter in the upper right corner of the main interface (it is recommended that the environment of the imported interpreter has the aforementioned library, and it is better if there is pytorch)! </b>
+</p>
+<h1>Operation process</h1>
+<p>
+1. Download the processing package in the lower left corner and import the Python interpreter path (Python icon in the upper right corner of the main interface);<br/>
+2. Click the Import Image button and select to import svg or jpg/png;<br/>
+3. While the second step is in progress, the program will automatically download the relevant package in the Python terminal and pop up a prompt box;<br/>
+4. Modify the 3 (when importing svg) or 5 (when importing svg/png) parameters on the right side of this column;<br/>
+5. Click the Image FFT Dynamic Display button, the program will pop up the execution information box of the Python program. If there is no abnormality, the processing program will eventually pop up. Click the Run button in the upper left corner of the processing program to start drawing. <br/>
+6. Before executing step 5, the program will automatically open a dialog box in the lower left corner to interrupt the Python program. Enter the command in cmd as required by the dialog box to stop the running Python program. <br/>
+7. After the <b>image FFT dynamic display is completed</b> (the pde file has popped up), click the two blue buttons in the lower right corner to retransmit the corresponding parameters (the remaining parameters must be transferred before the Python program is executed). Re-run the pde file to achieve drawing under the new parameters.
+</p>
+<h1>Parameter Description</h1>
+<p>
+1. Contour sampling rate: the ratio of sampling points to all contour points (equally spaced sampling);<br/>
+
+2. Fourier coefficient calculation threshold: how many Fourier coefficients (number of circles) are calculated for the same path;<br/>
+
+3. Whether to perform curve fitting: whether to connect some adjacent curves (broken lines);<br/>
+
+4. Fourier circle rotation speed: the frequency of processing drawing, the higher the speed, the faster, but some points may be skipped, resulting in discontinuous drawing, on the contrary, the lower the speed, the slower, and the drawn path is relatively continuous;<br/>
+
+5. Whether to clear the existing track when redrawing: when processing renders an image, whether to clear the original track after drawing all paths in one round. <br/>
+
+</p>
+</body>
+</html>

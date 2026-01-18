@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>方式2</title>
+  <link rel="stylesheet" href="katex/katex.min.css">
+  <script defer src="katex/katex.min.js"></script>
+  <script defer src="katex/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\(', right: '\\)', display: false }
+      ]
+    });
+  });
+  </script>
+  <style>
+        .bordered-text {
+            border: 2px solid #000; 
+            padding: 10px; 
+            display: inline-block; 
+        }
+  </style>
+  <link rel="stylesheet" href="highlight/styles/default.min.css">
+  <script src="highlight/highlight.min.js"></script>
+  <script src="highlight/languages/matlab.js"></script>
+  <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+  </script>
+  <style>
+            pre, code {
+            font-size: 14px; 
+        }
+   </style>
+   <script>
+        function openInBrowser(event) {
+            event.preventDefault(); 
+            window.open(event.target.href, '_blank'); 
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', openInBrowser);
+            });
+        });
+    </script> 
+</head>
+<body>
+<p style="font-size: 16px;">参考程序来源：
+  <a href="https://github.com/ruanluyu/FourierCircleDrawing">FourierCircleDrawing github</a></p>
+<p style="font-size: 16px;">参考视频链接：
+  <a href="https://www.bilibili.com/video/av28374720/">bilibili视频（1000个卫星轨道画初音）</a></p>
+  <br/>
+  <h1>说明</h1>
+<p>本app接入的程序是我在以上链接的工程的原作者之基础上改写的，其中导入svg图片的模块基本沿用原作者的主程序，在其基础上添加了对svg图像的大小调整及svg路径读取，并能传入傅里叶系数计算阈值、傅里叶圆旋转速度、重绘是否清除已有轨道等3个参数。其相关数学原理见下：
+</p>
+<embed src="Report.pdf" type="application/pdf" width="100%" height="600px" />
+<p>事实上，原作者的实现方式有较多限制：首先需要用Adobe Illustrator提取图像的svg路径并复制到一个txt文档内，具体提取方式可以参考bilibili视频<a href="https://www.bilibili.com/video/BV1d4411d7js/">用傅立叶级数画一个比宇宙更远的地方</a>。该过程提取的svg必须是首尾相连的单路径，否则后续Python程序只能提取出第一段路径的傅里叶系数或者processing程序执行效果与原图不合。这是不太容易实现的。然后运行Python程序，导出数据文件，经processing程序读取后在画布上动态渲染，即可得到效果。
+</p>
+<p>导入jpg/png的模块则有较大改动，其核心是读取轮廓点并转绘为仅含M、L路径形式的svg路径。首先，根据图片大小的不同，将图片分为两类：一类图片的宽、高均分别小于内设processing屏幕大小1920x1080；另一类反之。第一类图片首先将其扩大至与1920x1080尺寸相合，再通过Python的opencv库提取图片硬边缘（opencv不支持中文路径，故本app必须在英文路径下），再将导出的png轮廓图使用svgwrite及opencv等库进行转写为svg的操作，得到svg图。另一类图片先进行canny硬边缘提取，转写为svg，再在svg的基础上缩小至与1920x1080尺寸相合。上述实现过程中根据传入的是否进行曲线拟合参数决定是否连接不同路径进行拟合。两类图片最终得到的svg，均通过Python程序（使用svgwrite、numpy等库）转写为不同路径依次相邻的svg，再通过svgpathtools库以一定格式将svg的路径导出为txt文件（导出时，为了让路径首尾相连，将每一条路径逆序再与原路径拼接）。Python主程序读取txt文件并根据环境内是否有pytorch动态采用cpu或gpu计算，然后导出各个路径的傅里叶系数。最后processing程序读取数据并进行图像渲染（程序内的参数t大于\(\pi\)时跳转至下一路径，即先实现路径倍增，图像渲染时再截半）。
+</p>
+<p>该模块的实现方式的主体思路是由本人给出的。其优点在能处理多路径的复杂图片，直接对常见的jpg、png格式图片进行操作。缺点在于只能生成仅含M、L路径的svg，实际路径均为离散点或折线，这样会导致采样量过大及采样不均的问题，在图片特别复杂的情况下容易过拟合或者程序计算效率过低（即使使用了gpu加速计算）。
+</p>
+<p><b>请先在左下角解压processing程序包（或确保PC上有processing程序），并在主界面右上角导入Python解释器（建议导入的解释器的环境里最好具有前述的库，如果有pytorch更好）！</b>
+</p>
+<h1>操作流程</h1>
+<p>
+1.下载左下角processing程序包，导入Python解释器路径（主界面右上角Python图标处）；<br/>
+2.点击导入图片按钮，选择导入svg或jpg/png；<br/>
+3.第2步进行的同时程序会自动在Python终端下载相关的包并弹出提示框；<br/>
+4.修改本栏右侧的3（导入svg时）或5（导入jpg/png时）个参数；<br/>
+5.点击图像FFT动态展示按钮，程序将弹出Python程序的执行信息框，若无异常，最终会弹出processing程序，点击processing程序左上角的运行按钮，即可开始绘制。<br/>
+6.第5步执行前，程序会在左下角自动打开中断Python程序的对话框，按对话框要求在cmd输入指令即可停止运行的Python程序。<br/>
+7.可以在<b>图像FFT动态展示执行完毕后</b>（已经弹出pde文件）点击右下角两个蓝色按钮，以重新传输对应的参数（其余参数必须在Python程序执行前传输），重新运行pde文件即可实现新参数下的绘制。
+</p>
+<h1>参数说明</h1>
+<p>
+1.轮廓采样率：采样点数占所有轮廓点数的比例（等间距采样）；<br/>
+
+2.傅里叶系数计算阈值：同一路径计算多少个傅里叶系数（圆圈数量）；<br/>
+
+3.是否进行曲线拟合：是否对部分相邻的曲线（折线）进行连接；<br/>
+
+4.傅里叶圆旋转速度：processing绘制的频率，越高速度越快，但部分点可能被跳过致绘制不连贯，反之，越低速度越慢，绘制的路径相对连续；<br/>
+
+5.重绘是否清除已有轨道：processing渲染图像时，将所有路径绘制完一轮后是否清除原先的轨迹。<br/>
+
+</p>
+</body>
+</html>

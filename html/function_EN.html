@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Functional Description</title>
+  <link rel="stylesheet" href="katex/katex.min.css">
+  <script defer src="katex/katex.min.js"></script>
+  <script defer src="katex/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\(', right: '\\)', display: false }
+      ]
+    });
+  });
+  </script>
+  <style>
+        .bordered-text {
+            border: 2px solid #000; 
+            padding: 10px; 
+            display: inline-block; 
+        }
+  </style>
+  <link rel="stylesheet" href="highlight/styles/default.min.css">
+  <script src="highlight/highlight.min.js"></script>
+  <script src="highlight/languages/matlab.js"></script>
+  <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+  </script>
+  <style>
+            pre, code {
+            font-size: 14px; 
+        }
+   </style>
+   <script>
+        function openInBrowser(event) {
+            event.preventDefault(); 
+            window.open(event.target.href, '_blank'); 
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', openInBrowser);
+            });
+        });
+    </script> 
+</head>
+<body>
+<h1>Functional Description</h1>
+<h2>Sidebar</h2>
+<p>
+The left button and the tab group header can adjust the current column. <br/>
+Click the button in the upper left corner of the interface to view the App functions, the reference materials used by the author when making the App, and the author's school email. <br/>
+The functions of the button in the upper right corner of the interface are as follows: <br/>
+1. Import images (for the Image FFT column); <br/>
+2. Import audio (for the Audio FFT and Real-time Audio Game columns); <br/>
+3. View Arduino program code and open Arduino program (for the Arduino Sound Signal Processing and Arduino Light Signal Processing columns); <br/>
+4. Language switching, you can switch between Chinese and English; <br/>
+5. Python interface, you can choose the Python interpreter on the PC.
+</p>
+<h2>FFT Theory</h2>
+<p>
+The related theories of Fast Fourier Transform are introduced in detail, including historical origin, Fourier series, Fourier transform, discrete Fourier transform and Fast Fourier transform.
+</p>
+<h2>Simple Graphic Demonstration</h2>
+<p>
+On the left are the phase spectrum, time domain diagram, frequency domain diagram, and three-dimensional frequency domain diagram of the Fourier transform of the square wave. The number of harmonics can be increased by sliding the slider (0-100). <br/>
+In the lower left corner is a real-time interactive html document for Fourier transform of hand-drawn closed curves. Click the button to enter and view it. <br/>
+In the upper right corner is the waveform description of the Fourier transform, and in the lower right corner is the application of Fourier transform on jpeg files.
+</p>
+<h2>Image FFT</h2>
+<p>
+There are two ways to apply FFT to images:<br/>
+Method 1: Based on C++, extract the outline of jpg/png/bmp images and provide dynamic display of Fourier circles, press F5 to start drawing (it is recommended that the imported image should not be too complex);<br/>
+Method 2: Based on Python (need PC with Python interpreter or click the upper link to enter the Python official website to download), extract the hard edge or single path svg of jpg/png, perform fast Fourier transform on the path, and render the image through the processing program (unzip the processing installation package or the processing program on the PC in the lower right corner). There are 5 related parameters on the right. After filling in or selecting, click the dynamic display button to perform Python program calculation and processing rendering. Click the start button in the upper left corner of the processing program to draw.
+</p>
+<h2>Audio FFT</h2>
+<p>
+Click the import song button to display the imported songs in the list box in the upper left corner. Click Play, Pause, Resume, Stop, Previous, Next and Adjust Progress Bar to adjust the song playback status. Select the Local or Global radio button option to draw a local or global waveform and spectrum in the middle coordinate area. <br/>
+The two buttons below can be used to enhance human voice based on Fast Fourier Transform and view related principles. <br/>
+On the right is the harmonic structure analysis of musical instruments. Select an instrument and click the instrument play button on the left to play a piece of pure music played by the instrument and display the harmonic structure image. Click the Stop button to stop the instrument from playing.
+</p>
+<h2>Arduino Sound Signal Processing</h2>
+<p>
+First check the circuit diagram to connect the Arduino Uno circuit (Note: the SIG ports of the sound sensor and light sensor in the figure correspond to the AO ports in the real object). The program will automatically find the PC port available for connection. Note that the port connected to the Arduino in the PC device manager. Click the Arduino icon in the upper right corner of the main interface to view the Arduino program and upload it to the Arduino Uno development board. Click the Execute Bat button. After selecting the port, click the Connect button. Click the Start button at the bottom to start collecting Arduino signals. (Due to the limitations of hardware and MATLAB processing capabilities, the actual processing effect will be delayed.) The program will display the dynamic images of waveforms, spectra and silence detection through fast Fourier transform, and dynamically update the parameter table. Click the End button to stop collecting signals. <br/>
+Click the Export Silence Filter button to get the audio after filtering out silence. Click the Play and Stop buttons to control the playback. <br/>
+The right side is the voice change processing column. You can choose to use Arduino or PC microphone for FFT-based voice change processing. If you choose a microphone, you must first use the Start and End buttons to record. Click the Play and Stop buttons in the lower right corner to control the playback of the voice-changed audio. The original and processed waveforms will be displayed during playback.<br/>
+Note: The mute threshold in the Arduino code is 560. The sound intensity signal is different depending on the capacitance of the sound sensor. The larger the capacitance, the greater the sound intensity signal and the more sensitive the detection. The capacitance of the sound sensor can be adjusted by the screw as shown in the figure. Please adjust it manually before use to make the mute threshold close to 560.
+</p>
+<img src="pictures/sound_sensor_real.png" alt="Sound Sensor" style="display: block; margin: 0 auto; width: 20%; height: auto;">
+<h2>Arduino Optical Signal Processing</h2>
+<p>
+Arduino connection method for simultaneous sound signal processing. Click the Start and End buttons to control the collection of optical signals. The parameter table on the right will be updated in real time, and the light intensity signal and spectrum energy distribution image will be displayed in the middle coordinate area. The photosensor is shown in the figure below.
+</p>
+<img src="pictures/photoresistor_real.png" alt="Photoresistor" style="display: block; margin: 0 auto; width: 20%; height: auto;">
+<h2>Real-time Music Game</h2>
+<p>
+Songs can be imported on the left side and FFT analysis can be performed. The analysis results are displayed on the lower left image. According to the prompts of the keyboard buttons corresponding to the musical notation notes in the text area, you can play the music game after clicking the start button. Click the play button to play the original music. Click the end button to end the music playback and music game. The score label can display the current score in real time. The volume can be adjusted in the lower right corner.
+</p>
+<h2>Interactive Practice</h2>
+<p>
+Interactive practice on the html component, a total of 10 questions, click to verify the answer to feedback the correctness.
+</p>
+<h2>Data Export</h2>
+<p>
+Select the file to be exported in the number check box, click the export data button, and select the export folder to complete the export.</p>
+</body>
+</html>

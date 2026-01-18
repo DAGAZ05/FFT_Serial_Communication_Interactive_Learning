@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>参考链接</title>
+  <link rel="stylesheet" href="katex/katex.min.css">
+  <script defer src="katex/katex.min.js"></script>
+  <script defer src="katex/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\(', right: '\\)', display: false }
+      ]
+    });
+  });
+  </script>
+  <style>
+        .bordered-text {
+            border: 2px solid #000; 
+            padding: 10px; 
+            display: inline-block; 
+        }
+  </style>
+  <link rel="stylesheet" href="highlight/styles/default.min.css">
+  <script src="highlight/highlight.min.js"></script>
+  <script src="highlight/languages/matlab.js"></script>
+  <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+  </script>
+  <style>
+            pre, code {
+            font-size: 14px; 
+        }
+   </style>
+   <script>
+        function openInBrowser(event) {
+            event.preventDefault(); 
+            window.open(event.target.href, '_blank'); 
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', openInBrowser);
+            });
+        });
+    </script> 
+</head>
+<a href="https://blog.csdn.net/zhang0558/article/details/136840352">信号处理之快速傅里叶变换(FFT)-通俗易懂</a><br/>
+<a href="https://www.arduino.cc/en/software">Arduino下载链接</a><br/>
+<a href="https://www.jezzamon.com/fourier/zh-cn.html">傅里叶变换交互式入门</a><br/>
+<a href="https://www.bilibili.com/video/BV1Gs411372c">FourierCircleDrawing bilibili</a><br/>
+<a href="https://github.com/Jezzamonn/fourier">Jezzamonn github</a><br/>
+<a href="https://betterexplained.com/articles/an-interactive-guide-to-the-fourier-transform/">An Interactive Guide To The Fourier Transform</a><br/>
+<a href="https://www.bilibili.com/video/BV1pW411J7s8/">But what is the Fourier Transform? A visual introduction.</a><br/>
+<a href="https://alexmiller.phd/posts/fourier-series-spinning-circles-visualization/">A Tale of Math & Art: Creating the Fourier Series Harmonic Circles Visualization</a><br/>
+<a href="https://zh.wikipedia.org/wiki/%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2">傅里叶变换（中文维基百科）</a><br/>
+<a href="https://en.wikipedia.org/wiki/Fourier_transform">Fourier transform (Wikipedia)</a><br/>
+ <a href="https://github.com/TheKOG/Fourier_Draw">傅里叶变换画图github</a><br/>
+<a href="https://www.bilibili.com/video/BV1mt411P7ZU/">bilibili视频</a><br/>
+<a href="https://github.com/ruanluyu/FourierCircleDrawing">FourierCircleDrawing github</a><br/>
+<a href="https://www.bilibili.com/video/av28374720/">bilibili视频（1000个卫星轨道画初音）</a><br/>
+<a href="https://www.bilibili.com/video/BV1d4411d7js/">用傅立叶级数画一个比宇宙更远的地方</a>
+</body>
+</html>

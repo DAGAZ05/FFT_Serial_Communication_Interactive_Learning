@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>practice</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; }
+        .question {
+            background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #4285F4; color: white; border: none; padding: 8px 15px;
+            border-radius: 4px; cursor: pointer; margin-top: 10px;
+        }
+        .feedback { margin-top: 10px; font-weight: bold; display: none; }
+        .correct { color: #0F9D58; }
+        .incorrect { color: #DB4437; }
+        img { max-width: 100%; border: 1px solid #ddd; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h2 style="color: #4285F4;">FFT interactive practice</h2>
+
+    <!-- Question 1: FFT Basics -->
+<div class="question">
+<h3>1. FFT is an optimized version of which algorithm? </h3>
+<input type="radio" name="q1" id="q1a" value="a">
+<label for="q1a">Discrete Fourier Transform (DFT)</label><br>
+<input type="radio" name="q1" id="q1b" value="b">
+<label for="q1b">Laplace Transform</label><br>
+<input type="radio" name="q1" id="q1c" value="c">
+<label for="q1c">Z Transform</label><br>
+<button onclick="checkAnswer('q1', 'a')">Verify answer</button>
+<div id="feedback-q1" class="feedback"></div>
+</div>
+
+<!-- Question 2: Frequency Domain Resolution -->
+<div class="question">
+<h3>2. If the sampling frequency is 1000 Hz, the number of FFT points is 1024, what is the frequency resolution? </h3>
+<input type="radio" name="q2" id="q2a" value="a">
+<label for="q2a">≈ 0.98 Hz</label><br>
+<input type="radio" name="q2" id="q2b" value="b">
+<label for="q2b">≈ 1.95 Hz</label><br>
+<input type="radio" name="q2" id="q2c" value="c">
+<label for="q2c">≈ 100 Hz</label><br>
+<button onclick="checkAnswer('q2', 'a')">Verify answer</button>
+<div id="feedback-q2" class="feedback"></div>
+</div>
+
+<!-- Question 3: Signal Identification (Picture Question) -->
+<div class="question">
+<h3>3. FFT of the signal below Which option does the spectrum most likely correspond to? </h3>
+<img src="pictures/sine_plus_noise.png" alt="Noisy sine wave" width="300"></br>
+<input type="radio" name="q3" id="q3a" value="a">
+<label for="q3a">Single peak + base noise</label><br>
+<input type="radio" name="q3" id="q3b" value="b">
+<label for="q3b">Multiple equally spaced peaks</label><br>
+<input type="radio" name="q3" id="q3c" value="c">
+<label for="q3c">No significant peak</label><br>
+<button onclick="checkAnswer('q3', 'a')">Verify answer</button>
+<div id="feedback-q3" class="feedback"></div>
+</div>
+
+    <!-- Question 4: Arduino Sampling -->
+<div class="question">
+<h3>4. When using Arduino to collect audio signals, in order to avoid aliasing, the sampling frequency should meet the following requirements:</h3>
+<input type="radio" name="q4" id="q4a" value="a">
+<label for="q4a">≥ 2 times the highest signal frequency</label><br>
+<input type="radio" name="q4" id="q4b" value="b">
+<label for="q4b">≤ the highest signal frequency</label><br>
+<input type="radio" name="q4" id="q4c" value="c">
+<label for="q4c">Not related to signal frequency</label><br>
+<button onclick="checkAnswer('q4', 'a')">Verify answer</button>
+<div id="feedback-q4" class="feedback"></div>
+</div>
+
+<!-- Question 5: Window function -->
+<div class="question">
+<h3>5. The main function of the Hanning Window is:</h3>
+<input type="radio" name="q5" id="q5a" value="a">
+<label for="q5a">Reduce spectrum leakage</label><br>
+<input type="radio" name="q5" id="q5b" value="b">
+<label for="q5b">Improve frequency resolution</label><br>
+<input type="radio" name="q5" id="q5c" value="c">
+<label for="q5c">Increase signal amplitude</label><br>
+<button onclick="checkAnswer('q5', 'a')">Verify answer</button>
+<div id="feedback-q5" class="feedback"></div>
+</div>
+
+<!-- Question 6: Arduino real-time FFT -->
+<div class="question">
+<h3>6. When implementing real-time FFT with Arduino, you usually need to: </h3>
+<input type="radio" name="q6" id="q6a" value="a">
+<label for="q6a">Send data to MATLAB/PC for processing</label><br>
+<input type="radio" name="q6" id="q6b" value="b">
+<label for="q6b">Calculate FFT directly on Arduino</label><br>
+<input type="radio" name="q6" id="q6c" value="c">
+<label for="q6c">Acquire time domain signal only</label><br>
+<button onclick="checkAnswer('q6', 'a')">Verify answer</button>
+<div id="feedback-q6" class="feedback"></div>
+</div>
+
+<!-- Question 7: Spectral symmetry -->
+<div class="question">
+<h3>7. The FFT spectrum of a real signal usually has: </h3>
+<input type="radio" name="q7" id="q7a" value="a">
+<label for="q7a">Conjugate symmetry</label><br>
+<input type="radio" name="q7" id="q7b" value="b">
+<label for="q7b">Random distribution</label><br>
+<input type="radio" name="q7" id="q7c" value="c">
+<label for="q7c">Only positive frequency components</label><br>
+<button onclick="checkAnswer('q7', 'a')">Verify answer</button>
+<div id="feedback-q7" class="feedback"></div>
+</div>
+
+   <!-- Question 8: Noise Identification -->
+<div class="question">
+<h3>8. The characteristics of white noise in the frequency domain are: </h3>
+<input type="radio" name="q8" id="q8a" value="a">
+<label for="q8a">Flat power spectrum</label><br>
+<input type="radio" name="q8" id="q8b" value="b">
+<label for="q8b">Single frequency peak</label><br>
+<input type="radio" name="q8" id="q8c" value="c">
+<label for="q8c">Periodic fluctuation</label><br>
+<button onclick="checkAnswer('q8', 'a')">Verify answer</button>
+<div id="feedback-q8" class="feedback"></div>
+</div>
+
+<!-- Question 9: Arduino sensor -->
+<div class="question">
+<h3>9. When measuring vibrations with an Arduino accelerometer, FFT can help: </h3>
+<input type="radio" name="q9" id="q9a" value="a">
+<label for="q9a">Identify the main frequency components of the vibration </label><br>
+<input type="radio" name="q9" id="q9b" value="b">
+<label for="q9b">Improve sensor accuracy </label><br>
+<input type="radio" name="q9" id="q9c" value="c">
+<label for="q9c">Reduce sampling time </label><br>
+<button onclick="checkAnswer('q9', 'a')">Verify answer </button>
+<div id="feedback-q9" class="feedback"></div>
+</div>
+
+<!-- Question 10: Practical Application -->
+<div class="question">
+<h3>10. In audio processing, FFT is often used for: </h3>
+<input type="radio" name="q10" id="q10a" value="a">
+<label for="q10a">Equalizer design and pitch detection</label><br>
+<input type="radio" name="q10" id="q10b" value="b">
+<label for="q10b">Reduce file size</label><br>
+<input type="radio" name="q10" id="q10c" value="c">
+<label for="q10c">Enhance time domain waveform</label><br>
+<button onclick="checkAnswer('q10', 'a')">Verify answer</button>
+<div id="feedback-q10" class="feedback"></div>
+</div>
+
+    <script>
+        function checkAnswer(questionId, correctAnswer) {
+            const selectedOption = document.querySelector(`input[name="${questionId}"]:checked`);
+            const feedbackDiv = document.getElementById(`feedback-${questionId}`);
+
+            if (!selectedOption) {
+feedbackDiv.textContent = "Please select an answer!";
+feedbackDiv.className = "feedback incorrect";
+feedbackDiv.style.display = "block";
+return;
+}
+
+if (selectedOption.value === correctAnswer) {
+feedbackDiv.textContent = "✅ Correct!";
+feedbackDiv.className = "feedback correct";
+} else {
+feedbackDiv.textContent = "❌ Wrong, the correct answer is option " + correctAnswer.toUpperCase();
+feedbackDiv.className = "feedback incorrect";
+}
+feedbackDiv.style.display = "block";
+}
+    </script>
+</body>
+</html>

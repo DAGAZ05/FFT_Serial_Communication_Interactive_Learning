@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematical principles of vocal enhancement</title>
+    <link rel="stylesheet" href="katex/katex.min.css">
+  <script defer src="katex/katex.min.js"></script>
+  <script defer src="katex/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\(', right: '\\)', display: false }
+      ]
+    });
+  });
+  </script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .math {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .note {
+            background-color: #e7f5ff;
+            padding: 15px;
+            border-left: 4px solid #4dabf7;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<h1>Mathematical Principles of Voice Enhancement Based on FFT</h1>
+
+<section id="overview">
+<h2>1. Overview</h2>
+<p>The core idea of ​​voice enhancement is to separate the human voice from the background noise through frequency domain processing. Fast Fourier Transform (FFT) is the key tool to achieve this process, and its mathematical basis is Discrete Fourier Transform (DFT). </p>
+</section>
+
+<section id="dft">
+<h2>2. Discrete Fourier Transform (DFT)</h2>
+<p>For discrete audio signal \(x[n]\) (\(n = 0,1,...,N-1\)), its DFT is defined as:</p>
+<div class="math">
+$$
+X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-j 2\pi kn/N}, \quad k = 0,1,...,N-1
+$$
+</div>
+<p>Where:</p>
+<ul>
+<li>\(X[k]\) is a complex representation in the frequency domain, containing amplitude and phase information</li>
+<li>\(k\) corresponds to frequency \(f_k = \frac{k \cdot F_s}{N}\) (\(F_s\) is the sampling rate)</li>
+</ul>
+
+<div class="note">
+<strong>FFT optimization:</strong> In practical applications, the fast Fourier transform (FFT) algorithm is used to reduce the computational complexity of DFT from \(O(N^2)\) to \(O(N \log N)\).
+</div>
+</section>
+
+<section id="stft">
+<h2>3. Short-time Fourier transform (STFT)</h2>
+<p>To analyze time-varying signals, the audio needs to be framed:</p>
+<div class="math">
+$$
+X[m,k] = \sum_{n=0}^{L-1} x[n+mH] \cdot w[n] \cdot e^{-j 2\pi kn/L}
+$$
+</div>
+<p>Parameter description:</p>
+<ul>
+<li>\(w[n]\): Window function (such as Hamming window \(w[n] = 0.54 - 0.46 \cos(2\pi n/L)\))</li>
+<li>\(L\): Frame length (such as 1024 points)</li>
+<li>\(H\): Frame shift (hop size, usually \(H = L/2\)）</li>
+<li>\(m\): Frame index</li>
+</ul>
+<img src="pictures/Short_time_fourier_transform.png" alt="STFT schematic" width="500" style="display: block; margin: 20px auto;">
+</section>
+
+    <section id="filtering">
+        <h2>4. Frequency Domain Filtering</h2>
+<h3>4.1 Vocal Band Selection</h3>
+<p>Design filter \(H[k]\) to retain the vocal frequency band (typically 300Hz-3kHz):</p>
+<div class="math">
+$$
+H[k] =
+\begin{cases}
+1 & \text{When } f_l \leq \frac{kF_s}{N} \leq f_h \\
+\text{Gradual transition} & \text{Boundary area} \\
+0 & \text{Others}
+\end{cases}
+$$
+</div>
+
+<h3>4.2 Frequency Domain Multiplication</h3>
+<p>The filtering operation is represented as complex multiplication in the frequency domain:</p>
+<div class="math">
+$$
+Y[m,k] = X[m,k] \cdot H[k]
+$$
+</div>
+</section>
+
+<section id="reconstruction">
+<h2>5. Signal reconstruction</h2>
+<h3>5.1 Inverse DFT (IDFT)</h3>
+<div class="math">
+$$
+y[m,n] = \frac{1}{N} \sum_{k=0}^{N-1} Y[m,k] \cdot e^{j 2\pi kn/N}
+$$
+</div>
+
+<h3>5.2 Overlap-add method (OLA)</h3>
+<p>Merge all frames to get the final signal:</p>
+<div class="math">
+$$
+y[n] = \sum_{m} y[m,n-mH] \cdot w[n-mH]
+$$
+</div>
+<div class="note">
+<strong>Phase processing:</strong> In actual implementation, the original phase is usually retained \(\angle X[m,k]\), only the amplitude spectrum \(|Y[m,k]| = |X[m,k]| \cdot H[k]\) is modified.
+</div>
+</section>
+
+<section id="enhancement">
+<h2>6. Enhanced Optimization Techniques</h2>
+<h3>6.1 Spectral Subtraction</h3>
+<div class="math">
+$$
+|Y[m,k]| = \max(|X[m,k]| - \alpha |D[k]|, \beta |X[m,k]|)
+$$
+</div>
+<p>Where \(|D[k]|\) is the noise spectrum estimate, \(\alpha\) is the amplitude reduction factor, and \(\beta\) is the spectrum lower limit. </p>
+
+<h3>6.2 Nonlinear Compression</h3>
+<div class="math">
+$$
+|Y[m,k]| = |X[m,k]|^\gamma \cdot |X[m,k]|^{1-\gamma}, \quad 0 < \gamma < 1
+$$
+</div>
+</section>
+
+<section id="conclusion">
+<h2>7. Summary</h2>
+<p>The complete vocal enhancement process can be expressed as:</p>
+<div class="math">
+$$
+\boxed{
+\text{Input signal} \rightarrow \text{STFT} \rightarrow \text{Frequency domain filtering} \rightarrow \text{Spectral enhancement} \rightarrow \text{ISTFT} \rightarrow \text{Output signal}
+}
+$$
+</div>
+<p>Key technical points:</p>
+<ol>
+<li>Efficient time-frequency conversion through FFT</li>
+<li>Reasonably design the human voice frequency band filter</li>
+<li>Process phase information to avoid distortion</li>
+<li>Optimize the overlapping reconstruction algorithm</li>
+</ol>
+</section>
+
+<footer>
+<p>© 2025 Audio Signal Processing Notes | Created by the app author</p>
+</footer>
+</body>
+</html>
