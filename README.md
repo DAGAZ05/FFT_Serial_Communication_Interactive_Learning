@@ -77,23 +77,23 @@
 
 [2]：软件中直接引用或在他人创作基础上修改的HTML文档的来源如下：
 
-https://blog.csdn.net/zhang0558/article/details/136840352；https://www.jezzamon.com/fourier/zh-cn.html；https://github.com/TheKOG/Fourier_Draw；https://github.com/ruanluyu/FourierCircleDrawing。
+<https://blog.csdn.net/zhang0558/article/details/136840352>；<https://www.jezzamon.com/fourier/zh-cn.html>；<https://github.com/TheKOG/Fourier_Draw>；<https://github.com/ruanluyu/FourierCircleDrawing>。
 
-[3]：KaTeX（用于HTML数学公式显示）：来源：https://github.com/KaTeX/KaTeX/releases，许可证：MIT。
+[3]：KaTeX（用于HTML数学公式显示）：来源：<https://github.com/KaTeX/KaTeX/releases>，许可证：MIT。
 
-Highlight.js（用于HTML代码显示）：来源：https://github.com/highlightjs/highlight.js/releases，许可证：BSD-3-Clause
+Highlight.js（用于HTML代码显示）：来源：<https://github.com/highlightjs/highlight.js/releases>，许可证：BSD-3-Clause
 
-[4]：网页截取自：https://www.jezzamon.com/fourier/zh-cn.html。
+[4]：网页截取自：<https://www.jezzamon.com/fourier/zh-cn.html>。
 
-[5]：C++源程序来源：https://github.com/TheKOG/Fourier_Draw，许可证：MIT。
+[5]：C++源程序来源：<https://github.com/TheKOG/Fourier_Draw>，许可证：MIT。
 
 [6]：图像FFT栏目所展示的例图为西北工业大学吉祥物航小天的图像，该图像仅用于标识学校归属，无商业用途，版权归西北工业大学所有。
 
-[7]：图像FFT栏目的基于Python选项中，导入svg功能所执行程序基本来自：https://github.com/ruanluyu/FourierCircleDrawing，许可证：MIT。
+[7]：图像FFT栏目的基于Python选项中，导入svg功能所执行程序基本来自：<https://github.com/ruanluyu/FourierCircleDrawing>，许可证：MIT。
 
 导入jpg/png功能的依赖执行程序为作者在以上源程序基础上进行较大范围修改得到的（增加了边缘提取、svg写入、svg路径提取与处理算法、动态调用GPU等）。
 
-[8]：依赖的Processing 3.4程序包（包含在.mlappinstall中）来源：https://processing.org/download，许可证：GNU LGPL/GPL。
+[8]：依赖的Processing 3.4程序包（包含在.mlappinstall中）来源：<https://processing.org/download>，许可证：GNU LGPL/GPL。
 
 本软件中仅调用Processing 进行图像渲染，未修改Processing 源代码及库。
 
@@ -194,19 +194,19 @@ The final version of this project (MATLAB App) can be downloaded from the follow
 
 [2]: The sources of HTML documents directly referenced in the software or modified based on others' creations are as follows:
 
-https://blog.csdn.net/zhang0558/article/details/136840352; https://www.jezzamon.com/fourier/zh-cn.html; https://github.com/TheKOG/Fourier_Draw; https://github.com/ruanluyu/FourierCircleDrawing.
+<https://blog.csdn.net/zhang0558/article/details/136840352>; <https://www.jezzamon.com/fourier/zh-cn.html>; <https://github.com/TheKOG/Fourier_Draw>; <https://github.com/ruanluyu/FourierCircleDrawing>.
 
-[3]: KaTeX (used for displaying HTML mathematical formulas): Source: https://github.com/KaTeX/KaTeX/releases, License: MIT. Highlight.js (for HTML code display): Source: https://github.com/highlightjs/highlight.js/releases, License: BSD-3-Clause
+[3]: KaTeX (used for displaying HTML mathematical formulas): Source: <https://github.com/KaTeX/KaTeX/releases>, License: MIT. Highlight.js (for HTML code display): Source: <https://github.com/highlightjs/highlight.js/releases>, License: BSD-3-Clause
 
-[4]: Webpage screenshot from: https://www.jezzamon.com/fourier/zh-cn.html
+[4]: Webpage screenshot from: <https://www.jezzamon.com/fourier/zh-cn.html>
 
-[5]: C++ source code source: https://github.com/TheKOG/Fourier_Draw, License: MIT
+[5]: C++ source code source: <https://github.com/TheKOG/Fourier_Draw>, License: MIT
 
 [6]: The example image displayed in the Image FFT section is an image of Hang Xiaotian, the mascot of Northwestern Polytechnical University. This image is only used to identify the school and has no commercial use. The copyright belongs to Northwestern Polytechnical University.
 
-[7]: The program executed by the import svg function in the Python-based option of the Image FFT section is basically from: https://github.com/ruanluyu/FourierCircleDrawing, License: MIT. The executable program for importing jpg/png is a modified version of the source code (with added edge extraction, SVG writing, SVG path extraction and processing algorithms, and dynamic GPU access).
+[7]: The program executed by the import svg function in the Python-based option of the Image FFT section is basically from: <https://github.com/ruanluyu/FourierCircleDrawing>, License: MIT. The executable program for importing jpg/png is a modified version of the source code (with added edge extraction, SVG writing, SVG path extraction and processing algorithms, and dynamic GPU access).
 
-[8]: The Processing 3.4 package (included in .mlappinstall) is available at https://processing.org/download and licensed under GNU LGPL/GPL.
+[8]: The Processing 3.4 package (included in .mlappinstall) is available at <https://processing.org/download> and licensed under GNU LGPL/GPL.
 
 This software only calls Processing for image rendering and does not modify the Processing source code or libraries.
 
