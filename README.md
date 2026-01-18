@@ -10,55 +10,55 @@
 
 展示FFT的相关文档，内容包括历史溯源、欧拉公式、FS（傅里叶级数）、FT（傅里叶变换）、DFS（离散傅里叶级数）、DTFT（离散时间傅里叶变换）、DFT（离散傅里叶变换）、FFT、MATLAB中常用的FFT工具及FFT的常见问题等内容。
 
-![1](pictures for README/1.png)
+![1](pictures%20for%20README/1.png)
 
 2. 简易图形示范：
 
 展示方波的傅里叶变换相关图像；实时绘制闭合图形的傅里叶变换动态图像；展示FFT（包括DFT等相关内容）在图形上的应用的文档。
 
-![2](pictures for README/2.png)
+![2](pictures%20for%20README/2.png)
 
 3. 图像FFT：
 
 可选择两种方式进行图像的FFT应用。方式1：基于C++，提取jpg/png/bmp图像的轮廓并提供傅里叶圆的动态展示；方式2：基于Python（需PC自带Python解释器），提取jpg/png的硬边缘或单路径svg，对路径进行快速傅里叶变换，通过processing程序进行图像渲染，可以手动调整5个相关参数。
 
-![3](pictures for README/3.png)
+![3](pictures%20for%20README/3.png)
 
 4. 音频FFT：
 
 实现了简单的音乐播放器界面，并基于FFT绘制歌曲的波形图、频谱图；基于FFT实现人声增强；播放内置的不同乐器演奏的歌曲，通过FFT对不同乐器的谐波结构进行分析。
 
-![4](pictures for README/4.png)
+![4](pictures%20for%20README/4.png)
 
 5. Arduino声信号处理：
 
 提供自动获取可用端口及连接Arduino串口的方式；提供Arduino Uno的线路连接方式（基于声音传感器）；通过FFT显示波形、频谱及静音检测的动态图像，并动态更新参数表；实现静音过滤；实现音频的变声处理（基于FFT将原音频转换为男声、女声、卡通声或机器声），录音设备支持Arduino Uno及PC麦克风。
 
-![5](pictures for README/5.png)
+![5](pictures%20for%20README/5.png)
 
 6. Arduino光信号处理：
 
 提供自动获取可用端口及连接Arduino串口的方式；提供Arduino Uno的线路连接方式（基于光敏传感器）；收集光信号并实时更新参数表；基于FFT显示波形图、频谱图。
 
-![6](pictures for README/6.png)
+![6](pictures%20for%20README/6.png)
 
 7. 实时音游：
 
 导入歌曲并对其进行主频分析；基于FFT模拟歌曲的音符并实现音游界面。
 
-![7](pictures for README/7.png)
+![7](pictures%20for%20README/7.png)
 
 8. 交互练习：
 
 用户完成10道FFT相关的检测题，可显示答案。
 
-![8](pictures for README/8.png)
+![8](pictures%20for%20README/8.png)
 
 9. 数据导出：
 
 可导出前述模块中涉及的部分文档、图像、参数表等。
 
-![9](pictures for README/9.png)
+![9](pictures%20for%20README/9.png)
 
 此外，边栏也提供了相关说明文档展示、语言切换、图像导入、音频导入、获取PC的Python解释器、查看Arduino程序等功能，并支持界面大小缩放。
 
@@ -122,13 +122,13 @@ The main interface of this app is divided into the following 9 sections, each im
 
 Displays relevant FFT documentation, including historical background, Euler's formula, FS (Fourier series), FT (Fourier transform), DFS (Discrete Fourier series), DTFT (Discrete-Time Fourier Transform), DFT (Discrete Fourier Transform), FFT, commonly used FFT tools in MATLAB, and common FFT issues.
 
-![1](pictures for README/1.png)
+![1](pictures%20for%20README/1.png)
 
 2. Simple Graphical Demonstration:
 
 Displays Fourier transform images of square waves; real-time plotting of Fourier transform dynamic images of closed figures; documentation demonstrating the application of FFT (including DFT and related content) in graphics.
 
-![2](pictures for README/2.png)
+![2](pictures%20for%20README/2.png)
 
 3. Image FFT:
 
@@ -138,43 +138,43 @@ Method 1: Based on C++, extracts the outline of JPG/PNG/BMP images and provides 
 
 Method 2: Based on Python (requires a PC with a built-in Python interpreter), extracts hard edges or single-path SVG from JPG/PNG images, performs Fast Fourier Transform on the path, and renders the image using the Processing program. Five related parameters can be manually adjusted.
 
-![3](pictures for README/3.png)
+![3](pictures%20for%20README/3.png)
 
 4. Audio FFT:
 
 Implements a simple music player interface and draws waveform and spectrum diagrams of songs based on FFT; enhances vocals based on FFT; plays songs played by different built-in instruments and analyzes the harmonic structure of different instruments using FFT.
 
-![4](pictures for README/4.png)
+![4](pictures%20for%20README/4.png)
 
 5. Arduino Sound Signal Processing:
 
 Provides automatic acquisition of available ports and connection methods for Arduino serial ports; provides wiring methods for Arduino Uno (based on a sound sensor); displays waveforms, spectrums, and dynamic images of silence detection using FFT and dynamically updates the parameter table; implements silence filtering; implements audio voice changing processing (converting the original audio to male, female, cartoon, or robotic voices based on FFT); recording devices support Arduino Uno and PC microphones.
 
-![5](pictures for README/5.png)
+![5](pictures%20for%20README/5.png)
 
 6. Arduino Optical Signal Processing:
 
 Provides automatic acquisition of available ports and connection methods for the Arduino serial port; provides wiring methods for the Arduino Uno (based on a photosensitive sensor); collects optical signals and updates the parameter table in real time; displays waveforms and spectrum diagrams based on FFT.
 
-![6](pictures for README/6.png)
+![6](pictures%20for%20README/6.png)
 
 7. Real-time Music Game:
 
 Imports songs and performs frequency analysis; simulates song notes based on FFT and implements a music game interface.
 
-![7](pictures for README/7.png)
+![7](pictures%20for%20README/7.png)
 
 8. Interactive Exercises:
 
 Users complete 10 FFT-related test questions, and the answers are displayed.
 
-![8](pictures for README/8.png)
+![8](pictures%20for%20README/8.png)
 
 9. Data Export:
 
 Can export some documents, images, parameter tables, etc., involved in the aforementioned modules.
 
-![9](pictures for README/9.png)
+![9](pictures%20for%20README/9.png)
 
 In addition, the sidebar also provides functions such as displaying relevant documentation, language switching, image import, audio import, obtaining the PC's Python interpreter, viewing Arduino programs, and supports interface scaling.
 
